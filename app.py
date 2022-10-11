@@ -16,4 +16,7 @@ def register():
     full_name = first_name+last_name
     return render_template("welcome.html",full_name=full_name)
 
-    
+@app.route('/login')
+def login():
+    return render_template("login.html")
+
