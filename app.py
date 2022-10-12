@@ -1,7 +1,7 @@
 from flask import Flask, render_template,request
+from database import db
 
 app = Flask(__name__)
-
 @app.route('/')
 def hello():
     name = request.args.get('name')
