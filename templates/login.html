@@ -2,16 +2,29 @@
 {% extends "layout.html" %}
 
 {% block body %}
+<div class="header">
+    <h3>Login</h3>
+    <div class="bulat"></div>
+</div>
+<div class="main-container">
+    <form action="/login" method="post">
+        <div class="input-box">
+            <div class="input-section">
+                <label for="username">Username</label>
+                <input type="text" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="input-section">
+                <label for="password">Password</label>
+                <input type="password" name="password" placeholder="password" required>
+            </div>
 
-<h3>Login</h3>
-
-<form action="/login" method="post">
-    <input type="text" name="username" placeholder="username" required>
-    <input type="password" name="password" placeholder="password" required>
-    <input type="submit" value="Login">
-</form>
-{%for category, message in get_flashed_messages(with_categories=True)%}
-<div class="alert">{{message}}</div>
-{%endfor%}
+        </div>
+        
+        {%for category, message in get_flashed_messages(with_categories=True)%}
+        <div class="alert">{{message}}</div>
+        {%endfor%}
+        <input type="submit" value="Login">
+    </form>
+</div>
 
 {% endblock %}

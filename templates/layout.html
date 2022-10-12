@@ -4,10 +4,77 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Simple AR Tracking</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #F9A826;
+            height: 100vh;
+            width: 100%;
+        }
+        .header {
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            justify-content: center;
+            padding-right: 100px;
+            font-size: larger;
+            font-weight: 700;
+            color: white;
+            position: relative;
+        }
+        .bulat {
+            height: 250px;
+            width: 250px;
+            background-color: #FFB133;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 0;
+        }
+        .main-container{
+            width: 100%;
+            background-color: white;
+            padding: 48px 28px;
+            margin-top: 20px;
+            border-radius: 30px 30px 0 0;
+            height: 100%;
+
+        }
+        .input-section {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-section label{
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .input-section input{
+            margin-bottom: 30px;
+            border: 0;
+            color: #ADADAD;
+            border-bottom: 1px solid #ADADAD;
+        }
+    </style>
+
+
+    
 </head>
 <body>
-
     <div><h2>Simple AR Tracking</h2></div>
 
     {% block body %}
