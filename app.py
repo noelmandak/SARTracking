@@ -50,9 +50,16 @@ class Customer(db.Model):
 
 
 @app.route('/')
-def hello():
-    name = request.args.get('name')
-    return render_template("index.html")
+def home():
+    if "username" in session:
+        if session["username"] == "sales_admin":
+            return redirect(url_for("sales_admin"))
+        elif session["username"] == "finance_admin":
+            return redirect(url_for("finance_admin"))
+        elif session["username"] == "manager":
+            return redirect(url_for("manager"))
+    else:
+        return redirect(url_for("login"))
     
 @app.route('/sales_admin')
 def sales_admin():
@@ -132,4 +139,4 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='10.252.243.187', port=5000, debug=True, threaded=False)
