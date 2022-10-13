@@ -3,11 +3,13 @@
 
 {% block body %}
 <div class="header">
-    <h3>Login</h3>
-    <div class="bulat"></div>
+    <div class="bulat a"></div>
+    <div class="bulat b"></div>
+    <div class="bulat c"></div>
+    <h3 class="title">Login</h3>
 </div>
 <div class="main-container">
-    <form action="/login" method="post">
+    <form class="form-box" action="/login" method="post">
         <div class="input-box">
             <div class="input-section">
                 <label for="username">Username</label>
@@ -15,15 +17,16 @@
             </div>
             <div class="input-section">
                 <label for="password">Password</label>
-                <input type="password" name="password" placeholder="password" required>
+                <input type="password" name="password" placeholder="Enter your password" required>
             </div>
+            {%for category, message in get_flashed_messages(with_categories=True)%}
+            <div class="alert">{{message}}</div>
+            {%endfor%}
 
         </div>
         
-        {%for category, message in get_flashed_messages(with_categories=True)%}
-        <div class="alert">{{message}}</div>
-        {%endfor%}
-        <input type="submit" value="Login">
+
+        <input class="button" type="submit" value="Login">
     </form>
 </div>
 
