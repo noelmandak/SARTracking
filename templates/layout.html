@@ -4,11 +4,143 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Simple AR Tracking</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        button, input[type="submit"], input[type="reset"] {
+            border: none;
+            padding: 0;
+            outline: inherit;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #F9A826;
+            height: 100vh;
+            width: 100%;
+        }
+        .header {
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+
+        }
+        .title {
+            position: absolute;
+            font-size: larger;
+            font-weight: 700;
+            color: white;
+
+        }
+        .bulat {
+            background-color: #FFB133;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 0;
+        }
+        .bulat.a{
+            height: 250px;
+            width: 250px;
+            right: -50px;
+            top: -100px;
+        }
+        .bulat.b{
+            height: 47px;
+            width: 47px;
+            left: 28px;
+            top: 165px;
+        }
+        .bulat.c{
+            height: 17px;
+            width: 17px;
+            left: -4px;
+            top: 158px;
+        }
+        
+        .title {
+            height: 60px;
+            width: 128px;
+            left: 26px;
+            /* top: 112px; */
+            
+            font-family: Quicksand;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 60px;
+            letter-spacing: 0em;
+            text-align: left;
+        }
+
+        .main-container{
+            position: relative;
+            width: 100%;
+            background-color: white;
+            padding: 48px 28px;
+            margin-top: 20px;
+            border-radius: 30px 30px 0 0;
+            height: 100%;
+        }
+        .form-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-section label{
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .input-section input{
+            margin-bottom: 30px;
+            border: 0;
+            color: #ADADAD;
+            border-bottom: 1px solid #ADADAD;
+        }
+        .button {
+            background-color: #F9A826;
+            height: 50px;
+            width: 100%;
+            border-radius: 50px 50px 50px 50px;
+            color: white;
+
+            font-family: Quicksand;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 23px;
+            letter-spacing: 0em;
+        }
+        .button:hover {
+            background-color: #FFB133;
+        }
+    </style>
+
+
+    
 </head>
 <body>
-
-    <div><h2>Simple AR Tracking</h2></div>
 
     {% block body %}
     {% endblock %}
