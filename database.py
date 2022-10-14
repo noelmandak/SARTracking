@@ -38,3 +38,14 @@ class Customer(db.Model):
         self.alamat = alamat
         self.telp = telp
         self.foto = foto
+
+class Admin(db.Model):
+    id_admin = db.Column('id_admin',db.Integer, primary_key=True)
+    username = db.Column('username',db.String(100))
+    password = db.Column('password',db.Integer)
+    jabatan = db.Column('jabatan',db.String(100))
+    def __init__(self, id_admin, username, password, jabatan):
+        self.id_admin = id_admin
+        self.username = username
+        self.password = password
+        self.jabatan = jabatan
