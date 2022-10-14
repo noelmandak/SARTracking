@@ -1,0 +1,181 @@
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+        a {
+            text-decoration: none;
+        }
+
+        button, input[type="submit"], input[type="reset"] {
+            border: none;
+            padding: 0;
+            outline: inherit;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #F9A826;
+            height: 100vh;
+            width: 100vw;
+            border: 1px solid black;
+            overflow-x:hidden;
+            position: relative;
+        }
+        .header {
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+        }
+        .header.large {
+            height: 250px;
+        }
+        .title {
+            font-size: larger;
+            font-weight: 700;
+            position: absolute;
+            color: white;
+        }
+        .role {
+            position: absolute;
+            left: 25px;
+            top: 25px;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 25px;
+
+            color: #FFFFFF;
+        }
+        .header .name{
+            position: absolute;
+            left: 25px;
+            top: 60px;
+            color: #FFFFFF;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 19px;
+        }
+        .bulat {
+            background-color: #FFB133;
+            border-radius: 50%;
+            position: absolute;
+            z-index: -1;
+        }
+        .bulat.a{
+            height: 250px;
+            width: 250px;
+            right: -50px;
+            top: -100px;
+        }
+        .bulat.b{
+            height: 47px;
+            width: 47px;
+            left: 28px;
+            top: 165px;
+        }
+        .bulat.c{
+            height: 17px;
+            width: 17px;
+            left: -4px;
+            top: 158px;
+        }
+        
+        .title {
+            height: 60px;
+            width: 128px;
+            left: 26px;
+            /* top: 112px; */
+            
+            font-family: Quicksand;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 60px;
+            letter-spacing: 0em;
+            text-align: left;
+        }
+
+        .main-container{
+            position: relative;
+            width: 100%;
+            background-color: white;
+            padding: 48px 28px;
+            margin-top: 20px;
+            border-radius: 30px 30px 0 0;
+            height: 100%;
+        }
+        .form-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-section label{
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .input-section input{
+            margin-bottom: 30px;
+            border: 0;
+            height: 2em;
+            border-bottom: 1px solid #ADADAD;
+        }
+        .alert {
+            text-align: center;
+            color: red;
+        }
+        .button {
+            background-color: #F9A826;
+            height: 50px;
+            width: 100%;
+            border-radius: 50px 50px 50px 50px;
+            color: white;
+
+            font-family: Quicksand;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 23px;
+            letter-spacing: 0em;
+        }
+        .button:hover {
+            background-color: #FFB133;
+        }
+
+        .logout {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            padding: 5px;
+            border-radius: 10px;
+
+            background-color: #FFB133;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 12px;
+            line-height: 15px;
+            color: white;
+        }
+        .logout:hover{
+            background-color: #F9A826;
+        }
+
