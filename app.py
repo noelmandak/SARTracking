@@ -1,6 +1,6 @@
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
-
+import socket
 
 
 
@@ -53,6 +53,10 @@ def manager():
     # return redirect(url_for("login"))
     return render_template("manager.html")
 
+@app.route("/popup")
+def popup():
+    return render_template("detail_customer.html")
+
 # @app.route('/register',methods=['POST'])
 # def register():
 #     username  = request.args.get('username')
@@ -99,4 +103,6 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.250', port=5000, debug=True, threaded=False)
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    app.run(host=ip_address, port=5000, debug=True, threaded=False)

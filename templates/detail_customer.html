@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="header ">
+    <div class="bulat a"></div>
+    <div class="bulat b"></div>
+    <div class="bulat c"></div>
+    <div class="title-header small">Data Customer</div>
+</div>
+<div class="main-container align-center">
+    <div class="name-title">James Patrick</div>
+    <div class="picture-container">
+        <div class="profile-picture pp-big"></div>
+    </div>
+    <div class="row-data">
+        <div class="fiture">Address</div>
+        <div class="contain">Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 2003, lt. 8 </div>        
+    </div>
+    <div class="row-data">
+        <div class="fiture">Phone Number</div>
+        <div class="contain">+62812-5263-8777</div>        
+    </div>
+    <div class="row-data">
+        <div class="fiture">Status Customer</div>
+        <div class="contain">Aktif</div>        
+    </div>
+    <div class="row-data">
+        <div class="fiture">Total Transaction</div>
+        <div class="contain">Rp. 400.000</div>        
+    </div>
+    <div class="option">
+        <div class="row-data">
+            <div class="fiture">Paid</div>
+            <div class="contain">Rp. 200.000</div>        
+        </div>
+        <div class="row-data">
+            <div class="fiture">Unpaid</div>
+            <div class="contain">Rp. 200.000</div>        
+        </div>
+    </div>
+          
+    <div class="option">
+        <div class="button trio">Edit</div>
+        <div class="button trio">Deactive</div>
+        <div class="button trio">Delete</div>
+    </div>
+
+    <div class="h-line"></div>
+    <div class="name-title">Transaction History</div>
+    <table class="transaction-table">
+        <tr>
+            <td class="c-1">11/10/22</td>
+            <td class="c-2">unpaid</td>
+            <td class="c-3">200.000</td>
+        </tr>
+        <tr>
+            <td class="c-1">11/10/22</td>
+            <td class="c-2">paid at 12/10/22</td>
+            <td class="c-3">200.000</td>
+        </tr>
+        <tr>
+            <td class="c-1">11/10/22</td>
+            <td class="c-2">paid at 12/10/22</td>
+            <td class="c-3">200.000</td>
+        </tr>
+    </table>
+
+
+
+</div>
+
+{% endblock %}

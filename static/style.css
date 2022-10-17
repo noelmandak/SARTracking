@@ -20,7 +20,7 @@
             flex-direction: column;
             align-items: center;
             background-color: #F9A826;
-            height: 100vh;
+            min-height: 100vh;
             width: 100vw;
             border: 1px solid black;
             overflow-x:hidden;
@@ -54,6 +54,11 @@
             text-align: center;
 
             color: #FFFFFF;
+        }
+
+        .title-header.small {
+            font-weight: 700;
+            font-size: 28px;
         }
 
         .title {
@@ -135,12 +140,16 @@
             letter-spacing: 0em;
             text-align: left;
         }
+        .h-line {
+            width: 100%;
+            border-bottom: 1px solid #ADADAD;
 
+        }
         .main-container{
             position: relative;
             width: 100%;
             background-color: white;
-            padding: 48px 28px;
+            padding: 30px 30px;
             margin-top: 20px;
             border-radius: 30px 30px 0 0;
             height: 100%;
@@ -171,11 +180,16 @@
             color: red;
         }
         .button {
-            background-color: #F9A826;
+            background-color: #FFB133;
             height: 50px;
             width: 100%;
             border-radius: 50px 50px 50px 50px;
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
 
             font-family: Quicksand;
             font-size: 18px;
@@ -185,8 +199,22 @@
         }
 
         .button:hover {
-            background-color: #FFB133;
+            background-color: #F9A826;
         }
+        
+        .button.duo {
+            width: 40%;
+        }
+        .button.trio {
+            width: 30%;
+        }
+
+        .option {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
 
         .border-bottom {
             padding-bottom: 17px;
@@ -214,7 +242,7 @@
             background-color: #F9A826;
         }
 
-        .data-container {r: 1px black;
+        .data-container {
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -233,6 +261,10 @@
             height: 60px;
             border-radius: 50%;
             margin-right: 5px;
+        }
+        .profile-picture.pp-big {
+            width: 130px;
+            height: 130px;
         }
 
         .name {
@@ -273,4 +305,81 @@
 
         .manager {
             padding-top: 180px;
+        }
+
+        .popup {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.21);
+        }
+
+        .box-popup {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            width: 320px;
+            height: 300px;
+            background: #FFFFFF;
+            box-shadow: 5px 8px 10px 4px rgba(255, 177, 51, 0.56);
+            border-radius: 20px;
+        }
+        .title-popup {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 25px;
+            /* identical to box height */
+
+            text-align: center;
+        }
+        .icon-popup {
+            color: #FFB133;
+            font-size: 50px;
+        }
+        .picture-container {
+            display: flex;
+            gap:5px;
+        }
+        .align-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+        .space-around {
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .name-title {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 25px;
+            /* identical to box height */
+        }
+        .fiture {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 19px;
+        }
+        .transaction-table {
+            width: 100%;
+        }
+        td.c-1 {
+            text-align: left;
+        }
+        td.c-3 {
+            text-align: right;
         }
