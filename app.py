@@ -43,14 +43,15 @@ def finance_admin():
 
 @app.route('/manager')
 def manager():
-    if "username" in session:
-        if session["username"] == "manager":
-            return render_template("manager.html")
-        else: 
-            flash("Akses ditolak")
-            return redirect(url_for("login"))
-    flash("Login terlebih dahulu")
-    return redirect(url_for("login"))
+    # if "username" in session:
+    #     if session["username"] == "manager":
+    #         return render_template("manager.html")
+    #     else: 
+    #         flash("Akses ditolak")
+    #         return redirect(url_for("login"))
+    # flash("Login terlebih dahulu")
+    # return redirect(url_for("login"))
+    return render_template("manager.html")
 
 # @app.route('/register',methods=['POST'])
 # def register():

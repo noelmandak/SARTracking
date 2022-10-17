@@ -56,13 +56,22 @@
             color: #FFFFFF;
         }
 
-
         .title {
             font-size: larger;
             font-weight: 700;
             position: absolute;
             color: white;
         }
+
+        .title-header.total-piutang {
+            font-size: 35px;
+            line-height: 170px;
+        }
+
+        .jumlah-piutang {
+            line-height: 160px;
+        }
+
         .role {
             position: absolute;
             left: 25px;
@@ -180,7 +189,6 @@
         }
 
         .border-bottom {
-            /* background-color: red; */
             padding-bottom: 17px;
             border-bottom: 1px solid #ADADAD;
             margin-bottom: 17px;
@@ -206,7 +214,7 @@
             background-color: #F9A826;
         }
 
-        .data-container {
+        .data-container {r: 1px black;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -245,4 +253,24 @@
             display: flex;
             justify-content: space-around;
             flex-direction: column;
+        }
+
+        .total-piutang {
+            width: 306px;
+            height: 50px;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 40px;
+            line-height: 50px;
+            /* identical to box height */
+
+            text-align: right;
+
+            color: #FFFFFF;
+        }
+
+        .manager {
+            padding-top: 180px;
         }
