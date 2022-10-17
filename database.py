@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-db = None
-def connect_database(app):
-    global db
-    app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@127.0.0.1/SART'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-    db = SQLAlchemy(app)
-    return db
+app = Flask(__name__)
+app.secret_key = "sart"
+
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@127.0.0.1/SART'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+db = SQLAlchemy(app)
+
 
 class SaleInvoice(db.Model):
     id_transaksi = db.Column('id_transaksi',db.Integer,primary_key=True)
@@ -41,3 +41,27 @@ class Customer(db.Model):
         self.alamat = alamat
         self.telp = telp
         self.foto = foto
+
+class Admin(db.Model):
+    username = db.Column('username',db.String(100),primary_key=True)
+    password = db.Column('password',db.String(100))
+    jabatan = db.Column('jabatan',db.String(100))
+    def __init__(self, username, password, jabatan):
+        self.username = username
+        self.password = password
+        self.jabatan = jabatan
+
+def get_user(curr_username):
+    user = Admin.query.filter_by(username=curr_username).first()
+    return user
+
+def initiate_table():
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        adm1 = Admin('Patrick','123','manager')
+        adm2 = Admin('Noel','123','sales_admin')
+        adm3 = Admin('Tiff','123','finance_admin')
+        db.session.add_all([adm1,adm2,adm3])
+        db.session.commit()
+initiate_table()

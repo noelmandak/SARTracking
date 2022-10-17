@@ -1,13 +1,8 @@
 from flask import Flask, render_template,request,session,redirect,url_for,flash
-from flask_sqlalchemy import SQLAlchemy
 from database import *
 
 
 
-app = Flask(__name__)
-app.secret_key = "sart"
-
-db = connect_database(app)
 
 @app.route('/')
 def home():
@@ -18,6 +13,8 @@ def home():
             return redirect(url_for("finance_admin"))
         elif session["username"] == "manager":
             return redirect(url_for("manager"))
+        else:
+            return redirect(url_for("login"))
     else:
         return redirect(url_for("login"))
     
@@ -72,16 +69,17 @@ def login():
             return redirect(url_for("manager"))
 
     if request.method == 'POST':
-        username  = request.form['username']
-        password  = request.form['password']
-        if username in user:
-            if password == user[username]:
-                session['username'] = username
-                if username == "sales_admin":
+        curr_username  = request.form['username']
+        curr_password  = request.form['password']
+        curr_user = get_user(curr_username)
+        if curr_user is not None:
+            if str(curr_user.password) == curr_password:
+                session['username'] = curr_user.jabatan
+                if curr_user.jabatan == "sales_admin":
                     return redirect(url_for("sales_admin"))
-                elif username == "finance_admin":
+                elif curr_user.jabatan == "finance_admin":
                     return redirect(url_for("finance_admin"))
-                elif username == "manager":
+                elif curr_user.jabatan == "manager":
                     return redirect(url_for("manager"))
             else:
                 flash("Gagal, username atau passord tidak cocok")
@@ -99,4 +97,4 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(host='10.252.243.187', port=5000, debug=True, threaded=False)
+    app.run(host='192.168.16.172', port=5000, debug=True, threaded=False)
