@@ -20,14 +20,15 @@ def home():
     
 @app.route('/sales_admin')
 def sales_admin():
-    if "username" in session:
-        if session["username"] == "sales_admin":
-            return render_template("sale.html")
-        else: 
-            flash("Akses ditolak")
-            return redirect(url_for("login"))
-    flash("Login terlebih dahulu")
-    return redirect(url_for("login"))
+    # if "username" in session:
+    #     if session["username"] == "sales_admin":
+    #         return render_template("sale.html")
+    #     else: 
+    #         flash("Akses ditolak")
+    #         return redirect(url_for("login"))
+    # flash("Login terlebih dahulu")
+    # return redirect(url_for("login"))
+    return render_template("sale.html")
 
 @app.route('/finance_admin')
 def finance_admin():
@@ -97,4 +98,4 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(host='192.168.16.172', port=5000, debug=True, threaded=False)
+    app.run(host='10.237.78.240', port=5000, debug=True, threaded=False)

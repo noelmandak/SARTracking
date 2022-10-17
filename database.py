@@ -64,4 +64,4 @@ def initiate_table():
         adm3 = Admin('Tiff','123','finance_admin')
         db.session.add_all([adm1,adm2,adm3])
         db.session.commit()
-initiate_table()
+# initiate_table()
