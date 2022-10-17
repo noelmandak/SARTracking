@@ -71,7 +71,7 @@ def login():
     if request.method == 'POST':
         curr_username  = request.form['username']
         curr_password  = request.form['password']
-        curr_user = get_user(curr_username)
+        curr_user = get_login_info(curr_username)
         if curr_user is not None:
             if str(curr_user.password) == curr_password:
                 session['username'] = curr_user.jabatan
