@@ -1,10 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@127.0.0.1/SART'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-db = SQLAlchemy(app)
+db = None
+def connect_database(app):
+    global db
+    app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@127.0.0.1/SART'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+    db = SQLAlchemy(app)
+    return db
 
 class SaleInvoice(db.Model):
     id_transaksi = db.Column('id_transaksi',db.Integer,primary_key=True)
