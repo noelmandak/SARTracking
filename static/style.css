@@ -165,6 +165,12 @@
             border: 0;
             height: 2em;
             border-bottom: 1px solid #ADADAD;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 19px;
         }
         .alert {
             text-align: center;
@@ -275,6 +281,10 @@
             padding-top: 180px;
         }
 
-        .input-box {
-            gap:16px;
+        .data-box.active {
+            background-color: #A9EC9F;
+        }
+
+        .data-box.non-active {
+            background-color: #ED9393;
         }

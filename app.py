@@ -57,6 +57,14 @@ def manager():
     # return redirect(url_for("login"))
     return render_template("manager.html")
 
+@app.route('/new_customer')
+def new_customer():
+    return render_template("new_customer.html")
+
+@app.route('/data_customer')
+def data_customer():
+    return render_template("data_customer.html")
+
 # @app.route('/register',methods=['POST'])
 # def register():
 #     username  = request.args.get('username')
