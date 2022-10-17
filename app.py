@@ -30,6 +30,10 @@ def sales_admin():
     # return redirect(url_for("login"))
     return render_template("sale.html")
 
+@app.route('/new_invoice')
+def new_invoice():
+    return render_template("new_invoice.html")
+
 @app.route('/finance_admin')
 def finance_admin():
     if "username" in session:

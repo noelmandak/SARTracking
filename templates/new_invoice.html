@@ -1,0 +1,39 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="header">
+    <div class="bulat a"></div>
+    <div class="bulat b"></div>
+    <div class="bulat c"></div>
+    <h3 class="title large">New Invoice</h3>
+</div>
+<div class="main-container">
+    <form class="form-box" action="/login" method="post">
+        <div class="input-box">
+            <div class="input-section">
+                <label for="username">Customer Name</label>
+                <!-- <input type="text" name="username" placeholder="Enter your username" required> -->
+                <select name="username">
+                    <option>Tiffany</option>
+                    <option>Noel</option>
+                    <option>Patrick</option>
+                    <option>Kenny</option>
+                </select>
+            </div>
+            <div class="input-section">
+                <label for="total">Total</label>
+                <input type="number" min="0" name="total" placeholder="Input Customers Credit" required>
+            </div>
+            {%for category, message in get_flashed_messages(with_categories=True)%}
+            <div class="alert">{{message}}</div>
+            {%endfor%}
+
+        </div>
+        
+
+        <input class="button" type="submit" value="Create Invoice">
+    </form>
+</div>
+
+{% endblock %}
