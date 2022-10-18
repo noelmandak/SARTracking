@@ -11,7 +11,50 @@
     <a class="logout" href="/logout">logout</a>
 </div>
 <div class="main-container">
-    a
+    <div class="input-section">
+        <input type="text" name="search-by-name" placeholder="Cari berdasarkan nama" required>
+        <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
+    </div>
+    <div class="checkbox-container">
+        <input class="check-box" type="checkbox" name="select-multiple">
+        <label for="select-multiple">Select Multiple</label>
+    </div>
+    <div class="data-container">
+        <div class="data-box">
+            <div class="profile-picture"></div>
+            <div class="data-section">
+                <div class="name">
+                    Mr.Rudeus Greygrat
+                </div>
+                <div class="number-section">
+                    <div class="total">
+                        Rp.123.000
+                    </div>
+                    <div class="date">
+                        12/10/22
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="data-box">
+            <div class="profile-picture"></div>
+            <div class="data-section">
+                <div class="name">
+                    Mr.Rudeus Greygrat
+                </div>
+                <div class="number-section">
+                    <div class="total">
+                        Rp.123.000
+                    </div>
+                    <div class="date">
+                        12/10/22
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input class="button" type="submit" value="Mark as paid">
+    </div>
+
 </div>
 
 {% endblock %}

@@ -36,14 +36,15 @@ def new_invoice():
 
 @app.route('/finance_admin')
 def finance_admin():
-    if "username" in session:
-        if session["username"] == "finance_admin":
-            return render_template("finance.html")
-        else: 
-            flash("Akses ditolak")
-            return redirect(url_for("login"))
-    flash("Login terlebih dahulu")
-    return redirect(url_for("login"))
+    # if "username" in session:
+    #     if session["username"] == "finance_admin":
+    #         return render_template("finance.html")
+    #     else: 
+    #         flash("Akses ditolak")
+    #         return redirect(url_for("login"))
+    # flash("Login terlebih dahulu")
+    # return redirect(url_for("login"))s
+    return render_template("finance.html")
 
 @app.route('/manager')
 def manager():
@@ -111,4 +112,4 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.250', port=5000, debug=True, threaded=False)
+    app.run(host='10.237.88.84', port=5000, debug=True, threaded=False)
