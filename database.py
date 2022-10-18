@@ -180,30 +180,95 @@ def get_detail_customer(id):
         result.append(q.alamat)
         result.append(q.telp)
         result.append(q.foto)
-        paid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan == None)
-        notpaid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan != None)
-        paid = [r for r, in paid][0]
-        notpaid = [r for r, in notpaid][0]
+        notpaid = total_notpaid_by_id(id)
+        paid = total_paid_by_id(id)
         result.append(paid)
         result.append(notpaid)
         invoice = invoice_by_id(id)
         result.append(invoice)
+        print(result)
         return result
-# get_detail_customer(1)
 
 # Total piutang perusahaan
+def show_piutang_perusahaan():
+    with app.app_context():
+        result = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_pelunasan == None)
+        result = [r for r, in result][0]
+        print(result)
+        return result
+# show_piutang_perusahaan()
 
 # total piutang 1 orang
+def total_paid_by_id(id):
+    with app.app_context():
+        paid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan != None)
+        paid = [r for r, in paid][0]
+        return paid
 
 # total sudah dibayar 1 orang
+def total_notpaid_by_id(id):
+    with app.app_context():
+        notpaid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan == None)
+        notpaid = [r for r, in notpaid][0]
+        return notpaid
 
 # edit terbayar
+def paid(id_transaksi,id_pelunasan):
+    with app.app_context():
+        q = SaleInvoice.query.filter(SaleInvoice.id_transaksi==id_transaksi).first()
+        q.id_pelunasan = id_pelunasan
+        db.session.commit()
+        print('edited')
+        return "Edited"
 
 # bikin pelunasan (list id trans, tanggal, total)
+def make_pelunasan(list_invoice_id,tanggal):
+    with app.app_context():
+        total = 0
+        for invoice in list_invoice_id:
+            q = SaleInvoice.query.filter(SaleInvoice.id_transaksi==invoice).first()
+            total+=q.total
+        pelunasan = Pelunasan(tanggal, total, None)
+        db.session.add(pelunasan)
+        db.session.commit()
+        for invoice in list_invoice_id:
+            paid(invoice,pelunasan.id_pelunasan)
+        return 'Success'
+# make_pelunasan([1,2],datetime.datetime(2023, 5, 17))
 
 # get all return id_cus, nama, tot_utang, status, foto
+def get_customer_unpaid_data(id):
+    with app.app_context():
+        result = []
+        q = Customer.query.filter(Customer.id_customer==id).first()
+        result.append(q.id_customer)
+        result.append(q.nama)
+        tot_hutang = total_notpaid_by_id(id)
+        result.append(tot_hutang)
+        result.append(q.status)
+        result.append(q.foto)
+        print(result)
+        return result
+# get_customer_unpaid_data(1)
 
 # get foto by id
+def get_foto_by_id(id):
+    with app.app_context():
+        foto = Customer.query.filter(Customer.id_customer == id).first().foto
+        print(foto)
+        return foto
+# get_foto_by_id(1)
+
+def void(id_pelunasan):
+    with app.app_context():
+        q = Pelunasan.query.filter(Pelunasan.id_pelunasan == id_pelunasan).first()
+        q.status = 'void'
+        invoices = SaleInvoice.query.filter(SaleInvoice.id_pelunasan == id_pelunasan).all()
+        for invoice in invoices:
+            invoice.id_pelunasan = -1
+        db.session.commit()
+        return 'Success'
+# void(2)
 
 
 
