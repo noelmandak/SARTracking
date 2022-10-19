@@ -1,6 +1,6 @@
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
-
+import socket
 
 
 
@@ -20,37 +20,64 @@ def home():
     
 @app.route('/sales_admin')
 def sales_admin():
-    if "username" in session:
-        if session["username"] == "sales_admin":
-            return render_template("sale.html")
-        else: 
-            flash("Akses ditolak")
-            return redirect(url_for("login"))
-    flash("Login terlebih dahulu")
-    return redirect(url_for("login"))
+    # if "username" in session:
+    #     if session["username"] == "sales_admin":
+    #         return render_template("sale.html")
+    #     else: 
+    #         flash("Akses ditolak")
+    #         return redirect(url_for("login"))
+    # flash("Login terlebih dahulu")
+    # return redirect(url_for("login"))
+    return render_template("sale.html")
+
+@app.route('/new_invoice')
+def new_invoice():
+    return render_template("new_invoice.html")
 
 @app.route('/finance_admin')
 def finance_admin():
-    if "username" in session:
-        if session["username"] == "finance_admin":
-            return render_template("finance.html")
-        else: 
-            flash("Akses ditolak")
-            return redirect(url_for("login"))
-    flash("Login terlebih dahulu")
-    return redirect(url_for("login"))
+    # if "username" in session:
+    #     if session["username"] == "finance_admin":
+    #         return render_template("finance.html")
+    #     else: 
+    #         flash("Akses ditolak")
+    #         return redirect(url_for("login"))
+    # flash("Login terlebih dahulu")
+    # return redirect(url_for("login"))s
+    return render_template("finance.html")
 
 @app.route('/manager')
 def manager():
-    if "username" in session:
-        if session["username"] == "manager":
-            return render_template("manager.html")
-        else: 
-            flash("Akses ditolak")
-            return redirect(url_for("login"))
-    flash("Login terlebih dahulu")
-    return redirect(url_for("login"))
+    # if "username" in session:
+    #     if session["username"] == "manager":
+    #         return render_template("manager.html")
+    #     else: 
+    #         flash("Akses ditolak")
+    #         return redirect(url_for("login"))
+    # flash("Login terlebih dahulu")
+    # return redirect(url_for("login"))
+    return render_template("manager.html")
 
+@app.route("/popup")
+def popup():
+    return render_template("detail_customer.html")
+
+@app.route("/detail_customer")
+def detail_customer():
+    return render_template("detail_customer.html")
+
+@app.route("/data_transaction")
+def data_transaction():
+    return render_template("data_transaction.html")
+
+@app.route('/new_customer')
+def new_customer():
+    return render_template("new_customer.html")
+
+@app.route('/data_customer')
+def data_customer():
+    return render_template("data_customer.html")
+    
 # @app.route('/register',methods=['POST'])
 # def register():
 #     username  = request.args.get('username')
@@ -97,4 +124,6 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(host='192.168.16.172', port=5000, debug=True, threaded=False)
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    app.run(host=ip_address, port=5000, debug=True, threaded=False)

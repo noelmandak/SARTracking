@@ -26,6 +26,7 @@
             overflow-x:hidden;
             position: relative;
         }
+
         .header {
             height: 100px;
             display: flex;
@@ -35,15 +36,49 @@
             position: relative;
             width: 100%;
         }
+
         .header.large {
             height: 250px;
         }
+
+        .title-header {
+            width: 100%;
+            height: 63px;
+            text-align: center;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 50px;
+            line-height: 62px;
+            /* identical to box height */
+
+            text-align: center;
+
+            color: #FFFFFF;
+        }
+
+        .title-header.small {
+            font-weight: 700;
+            font-size: 28px;
+        }
+
         .title {
             font-size: larger;
             font-weight: 700;
             position: absolute;
             color: white;
         }
+
+        .title-header.total-piutang {
+            font-size: 35px;
+            line-height: 170px;
+        }
+
+        .jumlah-piutang {
+            line-height: 160px;
+        }
+
         .role {
             position: absolute;
             left: 25px;
@@ -56,6 +91,11 @@
             line-height: 25px;
 
             color: #FFFFFF;
+        }
+        
+        .text-section {
+            display: flex;
+            justify-content: space-between;
         }
         .header .name{
             position: absolute;
@@ -96,7 +136,6 @@
         
         .title {
             height: 60px;
-            width: 128px;
             left: 26px;
             /* top: 112px; */
             
@@ -107,16 +146,21 @@
             letter-spacing: 0em;
             text-align: left;
         }
+        .h-line {
+            width: 100%;
+            border-bottom: 1px solid #ADADAD;
 
+        }
         .main-container{
             position: relative;
             width: 100%;
             background-color: white;
-            padding: 48px 28px;
+            padding: 30px 30px;
             margin-top: 20px;
             border-radius: 30px 30px 0 0;
             height: 100%;
         }
+
         .form-box {
             display: flex;
             flex-direction: column;
@@ -132,22 +176,33 @@
             font-weight: 600;
             margin-bottom: 10px;
         }
-        .input-section input{
+        .input-section input, .input-section select{
             margin-bottom: 30px;
             border: 0;
             height: 2em;
             border-bottom: 1px solid #ADADAD;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 19px;
         }
         .alert {
             text-align: center;
             color: red;
         }
         .button {
-            background-color: #F9A826;
+            background-color: #FFB133;
             height: 50px;
             width: 100%;
             border-radius: 50px 50px 50px 50px;
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
 
             font-family: Quicksand;
             font-size: 18px;
@@ -155,8 +210,29 @@
             line-height: 23px;
             letter-spacing: 0em;
         }
+
         .button:hover {
-            background-color: #FFB133;
+            background-color: #F9A826;
+        }
+        
+        .button.duo {
+            width: 40%;
+        }
+        .button.trio {
+            width: 30%;
+        }
+
+        .option {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        .border-bottom {
+            padding-bottom: 17px;
+            border-bottom: 1px solid #ADADAD;
+            margin-bottom: 17px;
         }
 
         .logout {
@@ -177,5 +253,189 @@
         }
         .logout:hover{
             background-color: #F9A826;
+        }
+
+        .data-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .data-box {
+            background-color: #D9D9D9;
+            display: flex;
+            border-radius: 50px;
+        }
+
+        .profile-picture {
+            background: url('images/rudeus.png');
+            background-size: cover;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .profile-picture.pp-big {
+            width: 130px;
+            height: 130px;
+        }
+
+        .data-box .name, .data-box  .status {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .number-section {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .data-section {
+            width: 80%;
+            display: flex;
+            justify-content: space-around;
+            flex-direction: column;
+        }
+        
+        .data-box.paid {
+            cursor: pointer;
+            background-color: #7CDCD6;
+        }
+
+        .data-box.paid:hover {
+            background-color: #74d2cc;
+        }
+
+        .total-piutang {
+            width: 306px;
+            height: 50px;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 40px;
+            line-height: 50px;
+            /* identical to box height */
+
+            text-align: right;
+
+            color: #FFFFFF;
+        }
+
+        .manager {
+            padding-top: 180px;
+        }
+
+        .popup {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.21);
+        }
+
+        .box-popup {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            width: 320px;
+            height: 300px;
+            background: #FFFFFF;
+            box-shadow: 5px 8px 10px 4px rgba(255, 177, 51, 0.56);
+            border-radius: 20px;
+        }
+        .title-popup {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 25px;
+            /* identical to box height */
+
+            text-align: center;
+        }
+        .icon-popup {
+            color: #FFB133;
+            font-size: 50px;
+        }
+        .picture-container {
+            display: flex;
+            gap:5px;
+        }
+        .align-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+        .space-around {
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .name-title {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 25px;
+            /* identical to box height */
+        }
+        .fiture {
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 19px;
+        }
+        .transaction-table {
+            width: 100%;
+        }
+        td.c-1 {
+            text-align: left;
+        }
+        td.c-3 {
+            text-align: right;
+        }
+
+        .split-month {
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 19px;
+            text-align: center;
+        }
+        
+        .data-box.active {
+            background-color: #A9EC9F;
+        }
+
+        .data-box.non-active {
+            background-color: #ED9393;
+        }
+
+        i {
+            color: #FFFFFF;
+        }
+
+        .checkbox-container {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .add-button {
+            font-size: 48px;
+            position: absolute;
+            width: 42px;
+            height: 40px;
+            right: 25px;
+            filter: drop-shadow(2px 2px 4px #C98C2B);
         }
 

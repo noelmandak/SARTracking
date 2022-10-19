@@ -270,7 +270,3 @@ def void(id_pelunasan):
         return 'Success'
 # void(2)
 
-
-
-
-
