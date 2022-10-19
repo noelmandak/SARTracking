@@ -26,6 +26,7 @@
             overflow-x:hidden;
             position: relative;
         }
+
         .header {
             height: 100px;
             display: flex;
@@ -35,6 +36,7 @@
             position: relative;
             width: 100%;
         }
+
         .header.large {
             height: 250px;
         }
@@ -134,7 +136,6 @@
         
         .title {
             height: 60px;
-            width: 128px;
             left: 26px;
             /* top: 112px; */
             
@@ -159,6 +160,7 @@
             border-radius: 30px 30px 0 0;
             height: 100%;
         }
+
         .form-box {
             display: flex;
             flex-direction: column;
@@ -174,11 +176,17 @@
             font-weight: 600;
             margin-bottom: 10px;
         }
-        .input-section input{
+        .input-section input, .input-section select{
             margin-bottom: 30px;
             border: 0;
             height: 2em;
             border-bottom: 1px solid #ADADAD;
+
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 19px;
         }
         .alert {
             text-align: center;
@@ -404,3 +412,30 @@
             line-height: 19px;
             text-align: center;
         }
+        
+        .data-box.active {
+            background-color: #A9EC9F;
+        }
+
+        .data-box.non-active {
+            background-color: #ED9393;
+        }
+
+        i {
+            color: #FFFFFF;
+        }
+
+        .checkbox-container {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .add-button {
+            font-size: 48px;
+            position: absolute;
+            width: 42px;
+            height: 40px;
+            right: 25px;
+            filter: drop-shadow(2px 2px 4px #C98C2B);
+        }
+
