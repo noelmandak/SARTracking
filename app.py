@@ -1,7 +1,7 @@
-from colorama import init
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
 import socket
+import json
 
 def role_verify(jabatan):
     if "jabatan" in session:
@@ -72,11 +72,7 @@ def sales_admin():
         return redirect(url_for("home"))
     name = session["name"]
     all_invoice = invoice_lookup()
-    print(all_invoice)
-    # for i in range(len(all_invoice)):
-    #     print(f'{all_invoice[i][2]:,}')
-    #     all_invoice[i][2] = f'{all_invoice[i][2]:,}'
-    return render_template("sale.html",username=name, all_invoice=all_invoice)
+    return render_template("sale.html",name=name, all_invoice=all_invoice)
 
 
 @app.route('/new_invoice',methods=['POST',"GET"])
@@ -86,22 +82,16 @@ def new_invoice():
         return redirect(url_for("home"))
     
     if request.method == 'POST':
-        
         customer_name  = request.form['customer-name']
         total  = request.form['total']
         date  = request.form['date']
-        print(customer_name,total,date)
+        # print(customer_name,total,date)
         message = add_invoice(customer_name,total,date)
 
         flash(f"New Invoice Added",category=message)
         return redirect(url_for("sales_admin"))
 
-
     all_customer = get_all_customer_name()
-    
-    
-    
-
     return render_template("new_invoice.html", all_customer=all_customer)
 
 
@@ -111,12 +101,32 @@ def new_invoice():
 ##### Finance Admin #####
 @app.route('/finance_admin')
 def finance_admin():
-    if role_verify("finance_admin"):
-        return render_template("finance.html")
-    flash("Akses ditolak")
-    return redirect(url_for("home"))
+    if not role_verify("finance_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
 
+    
+    name = session["name"]
+    all_invoice = invoice_lookup()
 
+    return render_template("finance.html",name=name,all_invoice=all_invoice)
+
+@app.route('/mark_invoice', methods=["POST"])
+def mark_invoice():
+    if not role_verify("finance_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == 'POST':
+        
+        id_transactions = request.form['selected']
+        id_transactions=json.loads(id_transactions)['transactions']
+        date = request.form['date']
+        message = make_pelunasan(id_transactions,date)
+        flash(f"{len(id_transactions)} Transaction has paid",category=message)
+    
+
+    return redirect(url_for("finance_admin"))
 
 
 
@@ -156,7 +166,7 @@ def data_customer():
 
 
 if __name__ == '__main__':
-    # initiate_table()
+    initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)

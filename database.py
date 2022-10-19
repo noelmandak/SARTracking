@@ -93,14 +93,14 @@ def add_dummy_data():
             db.session.add(customer)
         db.session.commit()
 
-        
+        invoice = [["2022-10-20", "123000", "2"],["2022-10-20", "100000", "1"],["2022-10-20", "21000", "5"],["2022-10-20", "60000", "4"],["2022-10-20", "200000", "3"]]        
+        for date,total, id_customer in invoice: add_invoice(id_customer,total,date)
 
 def invoice_lookup():
     with app.app_context():
         # invoices = SaleInvoice.query.all()
-        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter(SaleInvoice.id_pelunasan==None).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
         result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img)] for id,name,total,date,img in invoices]
-        print(result)
         return result
 # invoice_lookup()
 
@@ -109,7 +109,6 @@ def invoice_by_id(id):
         invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter(Customer.id_customer==id).order_by(SaleInvoice.date)
         # db.session.query(invoices.exists())
         result = [r for r in invoices]
-        print(result)
         return result
 # invoice_by_name('Jabez')
 
@@ -126,7 +125,6 @@ def add_invoice(id_customer,total,date):
         new_inv = SaleInvoice(date, total, id_customer)
         db.session.add(new_inv)
         db.session.commit()
-        print('success')
         return 'success'
 
 # x = datetime.datetime(2020, 5, 17)
@@ -248,7 +246,7 @@ def make_pelunasan(list_invoice_id,tanggal):
         db.session.commit()
         for invoice in list_invoice_id:
             paid(invoice,pelunasan.id_pelunasan)
-        return 'Success'
+        return 'success'
 # make_pelunasan([1,2],datetime.datetime(2023, 5, 17))
 
 # get all return id_cus, nama, tot_utang, status, foto
