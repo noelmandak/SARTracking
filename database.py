@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask,url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
-
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "sart"
@@ -50,17 +50,19 @@ class Customer(db.Model):
 
 class Admin(db.Model):
     username = db.Column('username',db.String(100),primary_key=True)
+    name = db.Column('name',db.String(100))
     password = db.Column('password',db.String(100))
     jabatan = db.Column('jabatan',db.String(100))
-    def __init__(self, username, password, jabatan):
+    def __init__(self, username, name, password, jabatan):
         self.username = username
+        self.name = name
         self.password = password
         self.jabatan = jabatan
 
 def get_login_info(curr_username):
     with app.app_context():
         user = Admin.query.filter_by(username=curr_username).first()
-        if user != None: return [user.username,user.password,user.jabatan]
+        if user != None: return [user.username,user.name,user.password,user.jabatan]
         return None
 # get_login_info('Patrick')
 
@@ -68,17 +70,36 @@ def initiate_table():
     with app.app_context():
         db.drop_all()
         db.create_all()
-        adm1 = Admin('Patrick','123','manager')
-        adm2 = Admin('Noel','123','sales_admin')
-        adm3 = Admin('Tiff','123','finance_admin')
+        adm1 = Admin('Patrick','James Patrick Oentoro','123','manager')
+        adm2 = Admin('Noel','Noel Christevent Mandak','123','sales_admin')
+        adm3 = Admin('Tiff', 'Tiffany Sondakh','123','finance_admin')
         db.session.add_all([adm1,adm2,adm3])
         db.session.commit()
+        add_dummy_data()
+
+def add_dummy_data():    
+    with app.app_context():
+        nama = ["Elsa Nove Teresia","Audrey Josephine","Evan Christopher","Victor Chendra","Grace Melissa Khoe Ping Ing"]
+        alamat_rmci = ["Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1720, lt. 8 ",
+                       "Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1820, lt. 8 ",
+                       "Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1926, lt. 8 ",
+                       "Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1926, lt. 8 ",
+                       "Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1705, lt. 8 "]
+        no_telp = ["0812-2333-0000","0812-2333-0001","0812-2333-0002","0812-2333-0003","0812-2333-0004"]
+        foto = ["images/elsa.png","images/udey.png","images/evan.png","images/victor.png","images/ping.png"]
+        status = ["aktif","non-aktif","non-aktif","aktif","aktif"]
+        for i in range(5):
+            customer = Customer(nama[i],alamat_rmci[i],no_telp[i],foto[i],status[i])
+            db.session.add(customer)
+        db.session.commit()
+
+        
 
 def invoice_lookup():
     with app.app_context():
         # invoices = SaleInvoice.query.all()
-        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).order_by(SaleInvoice.date).all() # decending (baru ke lama)
-        result = [r for r in invoices]
+        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img)] for id,name,total,date,img in invoices]
         print(result)
         return result
 # invoice_lookup()
@@ -106,7 +127,7 @@ def add_invoice(id_customer,total,date):
         db.session.add(new_inv)
         db.session.commit()
         print('success')
-        return 'Success'
+        return 'success'
 
 # x = datetime.datetime(2020, 5, 17)
 # add_invoice(2,400000,x)

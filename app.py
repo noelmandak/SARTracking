@@ -1,3 +1,4 @@
+from colorama import init
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
 import socket
@@ -37,11 +38,11 @@ def login():
     if request.method == 'POST':
         curr_username  = request.form['username']
         curr_password  = request.form['password']
-        curr_user = get_login_info(curr_username) #[username, password, jabatan]
+        curr_user = get_login_info(curr_username) #[username, name, password, jabatan]
         if curr_user is not None:
-            if curr_user[1] == curr_password:
-                session['jabatan'] = curr_user[2]
-                session['username'] = curr_user[1]
+            if curr_user[2] == curr_password:
+                session['jabatan'] = curr_user[3]
+                session['name'] = curr_user[1]
                 if   session['jabatan'] == "sales_admin"  : return redirect(url_for("sales_admin"))
                 elif session['jabatan'] == "finance_admin": return redirect(url_for("finance_admin"))
                 elif session['jabatan'] == "manager"      : return redirect(url_for("manager"))
@@ -66,11 +67,42 @@ def logout():
 ##### Sales Admin #####
 @app.route('/sales_admin')
 def sales_admin():
-    if role_verify("sales_admin"):
-        return render_template("sale.html")
-    flash("Akses ditolak")
-    return redirect(url_for("home"))
+    if not role_verify("sales_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    name = session["name"]
+    all_invoice = invoice_lookup()
+    print(all_invoice)
+    # for i in range(len(all_invoice)):
+    #     print(f'{all_invoice[i][2]:,}')
+    #     all_invoice[i][2] = f'{all_invoice[i][2]:,}'
+    return render_template("sale.html",username=name, all_invoice=all_invoice)
 
+
+@app.route('/new_invoice',methods=['POST',"GET"])
+def new_invoice():
+    if not role_verify("sales_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    
+    if request.method == 'POST':
+        
+        customer_name  = request.form['customer-name']
+        total  = request.form['total']
+        date  = request.form['date']
+        print(customer_name,total,date)
+        message = add_invoice(customer_name,total,date)
+
+        flash(f"New Invoice Added",category=message)
+        return redirect(url_for("sales_admin"))
+
+
+    all_customer = get_all_customer_name()
+    
+    
+    
+
+    return render_template("new_invoice.html", all_customer=all_customer)
 
 
 
@@ -102,10 +134,6 @@ def manager():
 
 
 
-@app.route('/new_invoice')
-def new_invoice():
-    return render_template("new_invoice.html")
-
 @app.route("/popup")
 def popup():
     return render_template("detail_customer.html")
@@ -128,6 +156,7 @@ def data_customer():
 
 
 if __name__ == '__main__':
+    # initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)
