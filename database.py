@@ -1,11 +1,6 @@
-from asyncio.windows_events import NULL
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from pandas import isnull
-from requests import session
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import func
-import datetime
 
 
 app = Flask(__name__)
@@ -65,9 +60,8 @@ class Admin(db.Model):
 def get_login_info(curr_username):
     with app.app_context():
         user = Admin.query.filter_by(username=curr_username).first()
-        result = [user.username,user.password,user.jabatan]
-        print(result)
-        return result
+        if user != None: return [user.username,user.password,user.jabatan]
+        return None
 # get_login_info('Patrick')
 
 def initiate_table():
