@@ -57,6 +57,14 @@ def manager():
 def popup():
     return render_template("detail_customer.html")
 
+@app.route("/detail_customer")
+def detail_customer():
+    return render_template("detail_customer.html")
+
+@app.route("/data_transaction")
+def data_transaction():
+    return render_template("data_transaction.html")
+
 # @app.route('/register',methods=['POST'])
 # def register():
 #     username  = request.args.get('username')
