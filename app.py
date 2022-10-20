@@ -1,3 +1,4 @@
+from unicodedata import name
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
 import socket
@@ -150,10 +151,22 @@ def popup():
 
 @app.route("/detail_customer")
 def detail_customer():
-    return render_template("detail_customer.html")
+    # id = request.form['id']
+    id=1
+    nama,alamat,no_tlp,foto,status,paid,unpaid,invoices = get_detail_customer(id)
+    if unpaid != None and paid !=None:
+        total = unpaid+paid
+    elif unpaid != None:
+        total = unpaid
+    elif paid != None:
+        total = paid
+    else:
+        total = 0
+    return render_template("detail_customer.html",nama=nama,alamat=alamat,no_tlp=no_tlp,foto=url_for('static',filename=foto),status=status,paid=paid,unpaid=unpaid,invoices=invoices,total=total)
 
 @app.route("/data_transaction")
 def data_transaction():
+    id_pelunasan_to_all_invoice(1)
     return render_template("data_transaction.html")
 
 @app.route('/new_customer')
@@ -164,9 +177,55 @@ def new_customer():
 def data_customer():
     return render_template("data_customer.html")
 
+# import os
 
+# def coba():
+#     if request.method == 'POST':
+#         if 'file1' not in request.files:
+#             return 'there is no file1 in form!'
+#         file1 = request.files['file1']
+#         path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+#         file1.save(path)
+#         return path
+#     return '''
+#     <h1>Upload new File</h1>
+#     <form method="post" enctype="multipart/form-data">
+#     <input type="file" name="file1">
+#     <input type="submit">
+#     </form>
+#     '''
+import os
+from flask import Flask, flash, request, redirect, url_for
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = '\static\images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+@app.route('/coba', methods = ['POST','GET'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('download_file', name=filename))
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+    '''
+    
 if __name__ == '__main__':
-    initiate_table()
+    # initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)
