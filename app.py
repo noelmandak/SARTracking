@@ -174,11 +174,12 @@ def data_customer():
         img = get_foto_by_id(id)
         status = get_status_customer_by_id(id)
         data_customers.append([id,name,f'{total:,}',url_for('static',filename=img),status])
+    return render_template("data_customer.html",data_customers=data_customers)
 
-@app.route("/detail_customer")
+@app.route("/detail_customer",methods=['GET'])
 def detail_customer():
     # id = request.form['id']
-    id=1
+    id = request.args.get('id')
     nama,alamat,no_tlp,foto,status,paid,unpaid,invoices = get_detail_customer(id)
     if unpaid != None and paid !=None:
         total = unpaid+paid
@@ -210,53 +211,10 @@ def popup():
     return render_template("detail_customer.html")
 
 
-
-# import os
-
-# def coba():
-#     if request.method == 'POST':
-#         if 'file1' not in request.files:
-#             return 'there is no file1 in form!'
-#         file1 = request.files['file1']
-#         path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
-#         file1.save(path)
-#         return path
-#     return '''
-#     <h1>Upload new File</h1>
-#     <form method="post" enctype="multipart/form-data">
-#     <input type="file" name="file1">
-#     <input type="submit">
-#     </form>
-#     '''
-import os
-from flask import Flask, flash, request, redirect, url_for
-from werkzeug.utils import secure_filename
-
-UPLOAD_FOLDER = '\static\images'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-@app.route('/coba', methods = ['POST','GET'])
-def upload_file():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download_file', name=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+@app.route("/edit",methods=['GET'])
+def edit_customer():
+    id = request.args.get('id')
+    return render_template("edit_data_customer.html",id=id)
     
 if __name__ == '__main__':
     initiate_table()

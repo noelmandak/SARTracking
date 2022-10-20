@@ -234,14 +234,14 @@ def show_piutang_perusahaan():
 def total_paid_by_id(id):
     with app.app_context():
         paid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan != None)
-        paid = [r for r in paid][0]
+        paid = [r for r, in paid][0]
         return paid
 
 # total sudah dibayar 1 orang
 def total_notpaid_by_id(id):
     with app.app_context():
         notpaid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan == None)
-        notpaid = [r for r in notpaid][0]
+        notpaid = [r for r, in notpaid][0]
         return notpaid
 
 # edit terbayar
