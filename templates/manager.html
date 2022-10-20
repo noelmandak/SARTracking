@@ -7,15 +7,15 @@
     <div class="bulat b"></div>
     <div class="bulat c"></div>
     <h3 class="role">Manager</h3>
-    <h4 class="name">Mandak Patrick</h4>
+    <h4 class="name">{{name}}</h4>
     <a class="top-right-button" href="/logout">logout</a>
     <div class="title-header total-piutang">Total Piutang:</div>
-    <div class="title-header jumlah-piutang">Rp. 1.123.000</div>
+    <div class="title-header jumlah-piutang">Rp. {{total_piutang}}</div>
 </div>
 <div class="main-container">
     <div class="data-container manager">
-        <button class="button">Data Customer</button>
-        <button class="button">Data Transaction</button>
+        <a href="/data_customer" class="button">Data Customer</a>
+        <a href="/data_transaction" class="button">Data Transaction</a>
     </div>
 </div>
 

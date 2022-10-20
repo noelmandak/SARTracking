@@ -25,7 +25,7 @@ def home():
         return redirect(url_for("login"))
 
 
-@app.route('/login',methods=['POST',"GET"])
+@app.route('/login',methods=['POST','GET'])    # type: ignore
 def login():
     if "jabatan" in session:
         if session["jabatan"] == "sales_admin":
@@ -72,7 +72,7 @@ def sales_admin():
         return redirect(url_for("home"))
     name = session["name"]
     all_invoice = invoice_lookup()
-    return render_template("sale.html",name=name, all_invoice=all_invoice)
+    return render_template("sale.html",name=name, all_invoice=all_invoice,role=role)
 
 
 @app.route('/new_invoice',methods=['POST',"GET"])
@@ -118,14 +118,12 @@ def mark_invoice():
         return redirect(url_for("home"))
 
     if request.method == 'POST':
-        
         id_transactions = request.form['selected']
         id_transactions=json.loads(id_transactions)['transactions']
         date = request.form['date']
         message = make_pelunasan(id_transactions,date)
         flash(f"{len(id_transactions)} Transaction has paid",category=message)
     
-
     return redirect(url_for("finance_admin"))
 
 
@@ -136,8 +134,30 @@ def manager():
     if not role_verify("manager"):
         flash("Akses ditolak")
         return redirect(url_for("home"))
-    return render_template("manager.html")
+        
+    name = session["name"]
+    total_piutang = show_piutang_perusahaan()
+    total_piutang = f'{total_piutang:,}'
+    return render_template("manager.html",name=name,total_piutang=total_piutang)
 
+
+@app.route('/new_customer', methods=['POST', 'GET'])
+def new_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == 'POST':
+        name = request.form['username']
+        phone_number = request.form['phone-number']
+        address = request.form['address']
+        profile_pict =  'images/tiff.png'
+        # profile_pict =  request.form['profile_pict']'
+        message = create_customer(name, address, phone_number, profile_pict)
+        flash("New customer successfully added.", category=message)
+        return redirect(url_for("data_customer"))
+
+    return render_template("new_customer.html")
 
 
 @app.route('/data_customer')
@@ -156,6 +176,18 @@ def data_customer():
 
     return render_template("data_customer.html", data_customers=data_customers)
 
+@app.route("/data_transaction")
+def data_transaction():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+        
+    print(invoice_lookup_with_status())
+    all_invoice = invoice_lookup_with_status()
+    return render_template("data_transaction.html",all_invoice=all_invoice)
+
+
+
 
 
 
@@ -163,22 +195,11 @@ def data_customer():
 def popup():
     return render_template("detail_customer.html")
 
-@app.route("/detail_customer")
-def detail_customer():
-    return render_template("detail_customer.html")
-
-@app.route("/data_transaction")
-def data_transaction():
-    return render_template("data_transaction.html")
-
-@app.route('/new_customer')
-def new_customer():
-    return render_template("new_customer.html")
 
 
 
 if __name__ == '__main__':
-    initiate_table()
+    # initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)
