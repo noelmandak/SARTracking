@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db = SQLAlchemy(app)
 
 
-class SaleInvoice(db.Model):
+class SaleInvoice(db.Model):  # type: ignore
     id_transaksi = db.Column('id_transaksi',db.Integer,primary_key=True)
     date = db.Column('tgl_transaksi',db.Date)
     total = db.Column('total',db.Integer)
@@ -22,7 +22,7 @@ class SaleInvoice(db.Model):
         self.total = total
         self.id_customer = id_customer
 
-class Pelunasan(db.Model):
+class Pelunasan(db.Model):  # type: ignore
     id_pelunasan = db.Column('id_pelunasan',db.Integer, primary_key=True)
     date = db.Column('tgl_pelunasan',db.Date)
     total = db.Column('tot_pembayaran',db.Integer)
@@ -34,7 +34,7 @@ class Pelunasan(db.Model):
         self.status = status
 
 
-class Customer(db.Model):
+class Customer(db.Model):  # type: ignore
     id_customer = db.Column('id_customer',db.Integer, primary_key=True)
     nama = db.Column('nama',db.String(100))
     alamat = db.Column('alamat',db.String(200))
@@ -48,7 +48,7 @@ class Customer(db.Model):
         self.foto = foto
         self.status = status
 
-class Admin(db.Model):
+class Admin(db.Model):  # type: ignore
     username = db.Column('username',db.String(100),primary_key=True)
     name = db.Column('name',db.String(100))
     password = db.Column('password',db.String(100))
@@ -101,6 +101,13 @@ def invoice_lookup():
         # invoices = SaleInvoice.query.all()
         invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter(SaleInvoice.id_pelunasan==None).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
         result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img)] for id,name,total,date,img in invoices]
+        return result
+
+def invoice_lookup_with_status():
+    with app.app_context():
+        # invoices = SaleInvoice.query.all()
+        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto,SaleInvoice.id_pelunasan).join(Customer, SaleInvoice.id_customer == Customer.id_customer).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img),pelunasan] for id,name,total,date,img,pelunasan in invoices]
         return result
 # invoice_lookup()
 
