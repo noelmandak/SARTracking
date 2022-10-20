@@ -19,7 +19,7 @@
     </div>
     <div class="data-container">
         {% for id,name,total,img,status in data_customers %}
-        <div class="data-box {{status}}">
+        <a href="/detail_customer?id={{id}}" class="data-box {{status}}">
             <div class="profile-picture" style="background: url('{{img}}');background-size: cover;">
             </div>
             <div class="data-section">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
         {% endfor %}
     </div>
     <a href="/new_customer" class="button">Add New Customer</a>

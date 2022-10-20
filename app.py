@@ -1,4 +1,3 @@
-from unicodedata import name
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
 import socket
@@ -73,7 +72,7 @@ def sales_admin():
         return redirect(url_for("home"))
     name = session["name"]
     all_invoice = invoice_lookup()
-    return render_template("sale.html",name=name, all_invoice=all_invoice,role=role)
+    return render_template("sale.html",name=name, all_invoice=all_invoice)
 
 
 @app.route('/new_invoice',methods=['POST',"GET"])
@@ -92,7 +91,7 @@ def new_invoice():
         flash(f"New Invoice Added",category=message)
         return redirect(url_for("sales_admin"))
 
-    all_customer = get_all_customer_name()
+    all_customer = get_active_customer_name()
     return render_template("new_invoice.html", all_customer=all_customer)
 
 
@@ -171,24 +170,31 @@ def data_customer():
     data_customers = []
     for id, name in customers:
         total = total_notpaid_by_id(id)
+        if total==None: total = 0
         img = get_foto_by_id(id)
         status = get_status_customer_by_id(id)
         data_customers.append([id,name,f'{total:,}',url_for('static',filename=img),status])
+    return render_template("data_customer.html",data_customers=data_customers)
 
 @app.route("/detail_customer")
 def detail_customer():
     # id = request.form['id']
-    id=1
+    id = request.args.get('id')
     nama,alamat,no_tlp,foto,status,paid,unpaid,invoices = get_detail_customer(id)
-    if unpaid != None and paid !=None:
-        total = unpaid+paid
-    elif unpaid != None:
-        total = unpaid
-    elif paid != None:
-        total = paid
-    else:
-        total = 0
-    return render_template("detail_customer.html",nama=nama,alamat=alamat,no_tlp=no_tlp,foto=url_for('static',filename=foto),status=status,paid=paid,unpaid=unpaid,invoices=invoices,total=total)
+    if paid==None : paid=0
+    if unpaid==None :  unpaid=0
+    total = paid+unpaid
+    # if unpaid != None and paid !=None:
+    #     total = unpaid+paid
+    # elif unpaid != None:
+    #     total = unpaid
+    # elif paid != None:
+    #     total = paid
+    # else:
+    #     total = 0
+    if status == "active": act_button = "Deactivate"
+    else: act_button = "Activate"
+    return render_template("detail_customer.html",id=id,nama=nama,alamat=alamat,no_tlp=no_tlp,foto=url_for('static',filename=foto),status=status,paid=f'{paid:,}',unpaid=f'{unpaid:,}',invoices=invoices,total=f'{total:,}',act_button=act_button)
 
 @app.route("/data_transaction")
 def data_transaction():
@@ -196,70 +202,89 @@ def data_transaction():
         flash("Akses ditolak")
         return redirect(url_for("home"))
         
-    print(invoice_lookup_with_status())
     all_invoice = invoice_lookup_with_status()
+    print(all_invoice)
+    print("WWKWKWK")
+
     return render_template("data_transaction.html",all_invoice=all_invoice)
 
 
 
+@app.route("/make_void",methods=["POST","GET"])
+def make_void():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    all_invoice = invoice_lookup_with_status()
+    if request.method == "GET":
+        id = request.args["id"]
+        print(id)
+        print(id_pelunasan_to_all_invoice(id))
+        selected = id_pelunasan_to_all_invoice(id)
+        repayment_date = selected[0][-1]
+        return render_template("make_void.html",all_invoice=all_invoice,id=id,selected=selected,repayment_date=repayment_date)
+    
+    confirm = request.form["confirm"]
+    id = request.form["id"]
+    print(request.form)
+    if confirm=="Yes":
+        message = void(id)
+        flash(f"Make void for repayment id {id}",category=message)
+        print("make void",id)
+    else:
+        print("cancel")
+    return redirect(url_for("data_transaction"))
 
 
+@app.route("/edit_data_customer",methods=['GET','POST'])
+def edit_data_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        id = int(request.form["id"])
+        name = request.form["username"]
+        address = request.form["address"]
+        phone = request.form["phone-number"]
+        edit_customer(id,name,"nama")  # type: ignore
+        edit_customer(id,address,"alamat")  # type: ignore
+        edit_customer(id,phone,"no_telpon")  # type: ignore
+        flash("Profile Updated",category="success")
+        return redirect(url_for("detail_customer")+f"?id={id}")
+
+    id = request.args.get('id')
+    details = get_detail_customer(id)
+    name = details[0]
+    address = details[1]
+    phone = details[2]
+    img = details[3]
+    return render_template("edit_data_customer.html",id=id,name=name,phone=phone,img=img,address=address)
+  
+@app.route("/edit_status_customer", methods=["POST"])
+def edit_status_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    
+    id = request.form["id"]
+    # status = request.form["status-button"]
+    change_customer_status(id)
+    target = url_for("detail_customer")+f"?id={id}"
+    print(target)
+    return redirect(target)
 
 @app.route("/popup")
 def popup():
     return render_template("detail_customer.html")
+    
 
 
 
-# import os
-
-# def coba():
-#     if request.method == 'POST':
-#         if 'file1' not in request.files:
-#             return 'there is no file1 in form!'
-#         file1 = request.files['file1']
-#         path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
-#         file1.save(path)
-#         return path
-#     return '''
-#     <h1>Upload new File</h1>
-#     <form method="post" enctype="multipart/form-data">
-#     <input type="file" name="file1">
-#     <input type="submit">
-#     </form>
-#     '''
-import os
-from flask import Flask, flash, request, redirect, url_for
-from werkzeug.utils import secure_filename
-
-UPLOAD_FOLDER = '\static\images'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-@app.route('/coba', methods = ['POST','GET'])
-def upload_file():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download_file', name=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
     
 if __name__ == '__main__':
-    initiate_table()
+    # initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)

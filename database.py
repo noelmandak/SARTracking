@@ -100,15 +100,20 @@ def add_dummy_data():
 def invoice_lookup():
     with app.app_context():
         # invoices = SaleInvoice.query.all()
-        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto, SaleInvoice.id_pelunasan).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter(SaleInvoice.id_pelunasan==None).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter(SaleInvoice.id_pelunasan==None).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        print("hoho",invoices)
         result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img)] for id,name,total,date,img in invoices]
         return result
 
 def invoice_lookup_with_status():
     with app.app_context():
         # invoices = SaleInvoice.query.all()
-        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto,SaleInvoice.id_pelunasan).join(Customer, SaleInvoice.id_customer == Customer.id_customer).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
-        result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img),pelunasan] for id,name,total,date,img,pelunasan in invoices]
+        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto,SaleInvoice.id_pelunasan).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter((SaleInvoice.id_pelunasan>0)|(SaleInvoice.id_pelunasan==None)).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        result = []
+        for id,name,total,date,img,pelunasan in invoices:
+            if pelunasan==None : is_paid = "Unpaid"
+            else: is_paid = "Paid"
+            result.append([id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img),pelunasan,is_paid])
         return result
 # invoice_lookup()
 
@@ -141,6 +146,14 @@ def add_invoice(id_customer,total,date):
 def get_all_customer_name():
     with app.app_context():
         customers = Customer.query.all()
+        result = [(r.id_customer,r.nama) for r in customers]
+        print(result)
+        return result
+# get_all_customer_name()
+
+def get_active_customer_name():
+    with app.app_context():
+        customers = Customer.query.filter(Customer.status=="active").all()
         result = [(r.id_customer,r.nama) for r in customers]
         print(result)
         return result
@@ -184,7 +197,7 @@ def change_customer_status(id):
     with app.app_context():
         q = Customer.query.filter_by(id_customer=id).first()
         if q.status == 'active':
-            q.status = 'inactive'
+            q.status = 'non-active'
         else:
             q.status = 'active'
         db.session.commit()
@@ -234,14 +247,14 @@ def show_piutang_perusahaan():
 def total_paid_by_id(id):
     with app.app_context():
         paid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan != None)
-        paid = [r for r in paid][0]
+        paid = [r for r, in paid][0]
         return paid
 
 # total sudah dibayar 1 orang
 def total_notpaid_by_id(id):
     with app.app_context():
         notpaid = db.session.query(func.sum(SaleInvoice.total).label('total')).filter(SaleInvoice.id_customer.like(id),SaleInvoice.id_pelunasan == None)
-        notpaid = [r for r in notpaid][0]
+        notpaid = [r for r, in notpaid][0]
         return notpaid
 
 # edit terbayar
@@ -302,12 +315,14 @@ def void(id_pelunasan):
         q.status = 'void'
         invoices = SaleInvoice.query.filter(SaleInvoice.id_pelunasan == id_pelunasan).all()
         for invoice in invoices:
-            invoice.id_pelunasan = -1
+            invoice.id_pelunasan = None
+            # invoice.id_pelunasan = -1
         db.session.commit()
-        return 'Success'
+        return 'success'
 # void(2)
 
 def id_pelunasan_to_all_invoice(id_pelunasan):
+    print("idpelunsan",id_pelunasan)
     with app.app_context():
         q = db.session.query(Customer.nama,Customer.foto,SaleInvoice.date,SaleInvoice.total,Pelunasan.date).join(Customer,SaleInvoice.id_customer==Customer.id_customer).filter(SaleInvoice.id_pelunasan==id_pelunasan).all()
         result = [[nama ,url_for('static',filename=foto),date_trans.strftime("%d/%m/%Y"),f'{total:,}',date_paid.strftime("%d/%m/%Y")] for nama,foto,date_trans,total,date_paid in q]
