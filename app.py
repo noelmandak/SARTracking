@@ -174,14 +174,12 @@ def data_customer():
         img = get_foto_by_id(id)
         status = get_status_customer_by_id(id)
         data_customers.append([id,name,f'{total:,}',url_for('static',filename=img),status])
-
     return render_template("data_customer.html",data_customers=data_customers)
-    
 
 @app.route("/detail_customer")
 def detail_customer():
     # id = request.form['id']
-    id=1
+    id = request.args.get('id')
     nama,alamat,no_tlp,foto,status,paid,unpaid,invoices = get_detail_customer(id)
     if unpaid != None and paid !=None:
         total = unpaid+paid
@@ -238,6 +236,11 @@ def make_void():
 @app.route("/popup")
 def popup():
     return render_template("detail_customer.html")
+  
+@app.route("/edit",methods=['GET'])
+def edit_customer():
+    id = request.args.get('id')
+    return render_template("edit_data_customer.html",id=id)
 
     
 if __name__ == '__main__':
