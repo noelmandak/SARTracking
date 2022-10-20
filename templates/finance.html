@@ -102,6 +102,7 @@
     }
 
     function send_to_mark_invoice() {
+        if (selectedList.length==0) return;
         transactions_id = []
         popup = document.getElementById("popup")
         popup.style.display = "flex";

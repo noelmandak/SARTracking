@@ -23,7 +23,7 @@ class SaleInvoice(db.Model):  # type: ignore
         self.total = total
         self.id_customer = id_customer
 
-class Pelunasan(db.Model):
+class Pelunasan(db.Model):  # type: ignore
     id_pelunasan = db.Column('id_pelunasan',db.Integer, primary_key=True)
     date = db.Column('tgl_pelunasan',db.Date)
     total = db.Column('tot_pembayaran',db.Integer)
@@ -35,7 +35,7 @@ class Pelunasan(db.Model):
         self.status = status
 
 
-class Customer(db.Model):
+class Customer(db.Model):  # type: ignore
     id_customer = db.Column('id_customer',db.Integer, primary_key=True)
     nama = db.Column('nama',db.String(100))
     alamat = db.Column('alamat',db.String(200))
@@ -49,7 +49,7 @@ class Customer(db.Model):
         self.foto = foto
         self.status = status
 
-class Admin(db.Model):
+class Admin(db.Model):  # type: ignore
     username = db.Column('username',db.String(100),primary_key=True)
     name = db.Column('name',db.String(100))
     password = db.Column('password',db.String(100))
@@ -88,7 +88,7 @@ def add_dummy_data():
                        "Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1705, lt. 8 "]
         no_telp = ["0812-2333-0000","0812-2333-0001","0812-2333-0002","0812-2333-0003","0812-2333-0004"]
         foto = ["images/elsa.png","images/udey.png","images/evan.png","images/victor.png","images/ping.png"]
-        status = ["aktif","non-aktif","non-aktif","aktif","aktif"]
+        status = ["active","non-active","non-active","active","active"]
         for i in range(5):
             customer = Customer(nama[i],alamat_rmci[i],no_telp[i],foto[i],status[i])
             db.session.add(customer)
@@ -102,6 +102,13 @@ def invoice_lookup():
         # invoices = SaleInvoice.query.all()
         invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto, SaleInvoice.id_pelunasan).join(Customer, SaleInvoice.id_customer == Customer.id_customer).filter(SaleInvoice.id_pelunasan==None).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
         result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img)] for id,name,total,date,img in invoices]
+        return result
+
+def invoice_lookup_with_status():
+    with app.app_context():
+        # invoices = SaleInvoice.query.all()
+        invoices = db.session.query(SaleInvoice.id_transaksi, Customer.nama, SaleInvoice.total, SaleInvoice.date, Customer.foto,SaleInvoice.id_pelunasan).join(Customer, SaleInvoice.id_customer == Customer.id_customer).order_by(SaleInvoice.id_transaksi.desc()).all() # decending (baru ke lama)
+        result = [[id,name,f'{total:,}',date.strftime("%d/%m/%Y"),url_for('static',filename=img),pelunasan] for id,name,total,date,img,pelunasan in invoices]
         return result
 # invoice_lookup()
 
@@ -283,6 +290,11 @@ def get_foto_by_id(id):
         print(foto)
         return foto
 # get_foto_by_id(1)
+
+def get_status_customer_by_id(id):
+    with app.app_context():
+        status = Customer.query.filter(Customer.id_customer == id).first().status
+        return status
 
 def void(id_pelunasan):
     with app.app_context():
