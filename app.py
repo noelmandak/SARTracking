@@ -139,6 +139,24 @@ def manager():
     total_piutang = show_piutang_perusahaan()
     total_piutang = f'{total_piutang:,}'
 
+@app.route('/new_customer', methods=['POST', 'GET'])
+def new_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == 'POST':
+        name = request.form['username']
+        phone_number = request.form['phone-number']
+        address = request.form['address']
+        profile_pict =  'images/tiff.png'
+        # profile_pict =  request.form['profile_pict']'
+        message = create_customer(name, address, phone_number, profile_pict)
+        flash("New customer successfully added.", category=message)
+        return redirect(url_for("data_customer"))
+
+    return render_template("new_customer.html")
+
 
     return render_template("manager.html",name=name,total_piutang=total_piutang)
 
@@ -169,10 +187,6 @@ def data_transaction():
 def popup():
     return render_template("detail_customer.html")
 
-
-@app.route('/new_customer')
-def new_customer():
-    return render_template("new_customer.html")
 
 @app.route('/data_customer')
 def data_customer():
