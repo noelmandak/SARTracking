@@ -6,11 +6,10 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = "sart"
 
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@127.0.0.1/SART'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@127.0.0.1:3307/SART'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db = SQLAlchemy(app)
-
-
+                                 
 class SaleInvoice(db.Model):
     id_transaksi = db.Column('id_transaksi',db.Integer,primary_key=True)
     date = db.Column('tgl_transaksi',db.Date)

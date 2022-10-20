@@ -138,6 +138,24 @@ def manager():
     flash("Akses ditolak")
     return redirect(url_for("home"))
 
+@app.route('/new_customer', methods=['POST', 'GET'])
+def new_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == 'POST':
+        name = request.form['username']
+        phone_number = request.form['phone-number']
+        address = request.form['address']
+        profile_pict =  'images/tiff.png'
+        # profile_pict =  request.form['profile_pict']'
+        message = create_customer(name, address, phone_number, profile_pict)
+        flash("New customer successfully added.", category=message)
+        return redirect(url_for("data_customer"))
+
+    return render_template("new_customer.html")
+
 
 
 
@@ -155,10 +173,6 @@ def detail_customer():
 @app.route("/data_transaction")
 def data_transaction():
     return render_template("data_transaction.html")
-
-@app.route('/new_customer')
-def new_customer():
-    return render_template("new_customer.html")
 
 @app.route('/data_customer')
 def data_customer():
