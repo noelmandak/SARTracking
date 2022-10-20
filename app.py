@@ -133,13 +133,28 @@ def mark_invoice():
 ##### Manager #####
 @app.route('/manager')
 def manager():
-    if role_verify("manager"):
-        return render_template("manager.html")
-    flash("Akses ditolak")
-    return redirect(url_for("home"))
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    return render_template("manager.html")
 
 
 
+@app.route('/data_customer')
+def data_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    
+    customers = get_all_customer_name()
+    data_customers = []
+    for id, name in customers:
+        total = total_notpaid_by_id(id)
+        img = get_foto_by_id(id)
+        status = get_status_customer_by_id(id)
+        data_customers.append([id,name,f'{total:,}',url_for('static',filename=img),status])
+
+    return render_template("data_customer.html", data_customers=data_customers)
 
 
 
@@ -160,9 +175,6 @@ def data_transaction():
 def new_customer():
     return render_template("new_customer.html")
 
-@app.route('/data_customer')
-def data_customer():
-    return render_template("data_customer.html")
 
 
 if __name__ == '__main__':

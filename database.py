@@ -88,7 +88,7 @@ def add_dummy_data():
                        "Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 1705, lt. 8 "]
         no_telp = ["0812-2333-0000","0812-2333-0001","0812-2333-0002","0812-2333-0003","0812-2333-0004"]
         foto = ["images/elsa.png","images/udey.png","images/evan.png","images/victor.png","images/ping.png"]
-        status = ["aktif","non-aktif","non-aktif","aktif","aktif"]
+        status = ["active","non-active","non-active","active","active"]
         for i in range(5):
             customer = Customer(nama[i],alamat_rmci[i],no_telp[i],foto[i],status[i])
             db.session.add(customer)
@@ -272,6 +272,11 @@ def get_foto_by_id(id):
         print(foto)
         return foto
 # get_foto_by_id(1)
+
+def get_status_customer_by_id(id):
+    with app.app_context():
+        status = Customer.query.filter(Customer.id_customer == id).first().status
+        return status
 
 def void(id_pelunasan):
     with app.app_context():
