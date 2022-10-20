@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="header">
+    <div class="bulat a"></div>
+    <div class="bulat b"></div>
+    <div class="bulat c"></div>
+    <div class="title ">Data Transaction</div>
+    <a class="top-right-button" href="/manager">Back</a>
+</div>
+<div class="main-container">
+    
+    <div class="input-section">
+        <input type="text" id="searchbar" name="search-by-name" placeholder="Cari berdasarkan nama" onkeyup="search_name()">
+        <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
+    </div>
+    <div class="data-container ">
+        
+        {% for id,name,total,date,img,pelunasan,is_paid in all_invoice %}
+        
+        {% if is_paid == "Paid" %}
+        <a href="/make_void?id={{pelunasan}}" class="data-box selected">
+        {% else %}
+        <div class="data-box">
+        {% endif %}
+            <div class="profile-picture" style="background: url('{{img}}');background-size: cover;">
+            </div>
+            <div class="data-section">
+                <div class="text-section">
+                    <div class="name">{{name}}</div>
+                    <div class="status">{{is_paid}}</div>
+                </div>
+                <div class="number-section">
+                    <div class="date">
+                        {{date}}
+                    </div>
+                    <div class="total">
+                        Rp.{{total}}
+                    </div>
+                </div>
+            </div>
+        {% if is_paid == "Paid" %} </a>
+        {% else %} </div>
+        {% endif %}
+        {%endfor%}
+    </div>
+</div>
+
+
+<div class="popup" id="popup" >
+    <form class="box-popup" action="/make_void" method="post">
+        <div class="title-popup">Make Void For Repayment</div>
+        <div class="input-section" style="display: inline; margin-bottom: 5px;">
+            Repayment id: {{id}} 
+        </div>
+        <div class="input-section" style="display: inline; margin-bottom: 5px;">
+            Date: {{repayment_date}} 
+        </div>
+        
+        <div class="data-container" id="data-container" style="height: 100%;">
+            {% for name,img,tgl_pinjam,total,tgl_balik in selected %}
+            <div class="data-box selected">
+                <div class="profile-picture" style="background: url('{{img}}');background-size: cover;"></div>
+                <div class="data-section">
+                    <div class="text-section">
+                        <div class="name">{{name}}</div>
+                        <div class="status">Paid</div>
+                    </div>
+                    <div class="number-section">
+                        <div class="total">
+                            Rp.{{total}}
+                        </div>
+                        <div class="date">
+                            {{tgl_pinjam}}
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+            {% endfor %}
+        
+        </div>
+        <input type="text" name="id" hidden value="{{id}}">
+        <div class="option">
+            <button class="button duo" name="confirm" value="No">No</button>
+            <button class="button duo" name="confirm" value="Yes">Yes</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
