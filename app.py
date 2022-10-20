@@ -1,4 +1,3 @@
-from unicodedata import name
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
 import socket
@@ -73,7 +72,7 @@ def sales_admin():
         return redirect(url_for("home"))
     name = session["name"]
     all_invoice = invoice_lookup()
-    return render_template("sale.html",name=name, all_invoice=all_invoice,role=role)
+    return render_template("sale.html",name=name, all_invoice=all_invoice)
 
 
 @app.route('/new_invoice',methods=['POST',"GET"])
@@ -92,7 +91,7 @@ def new_invoice():
         flash(f"New Invoice Added",category=message)
         return redirect(url_for("sales_admin"))
 
-    all_customer = get_all_customer_name()
+    all_customer = get_active_customer_name()
     return render_template("new_invoice.html", all_customer=all_customer)
 
 
@@ -171,12 +170,13 @@ def data_customer():
     data_customers = []
     for id, name in customers:
         total = total_notpaid_by_id(id)
+        if total==None: total = 0
         img = get_foto_by_id(id)
         status = get_status_customer_by_id(id)
         data_customers.append([id,name,f'{total:,}',url_for('static',filename=img),status])
     return render_template("data_customer.html",data_customers=data_customers)
 
-@app.route("/detail_customer",methods=['GET'])
+@app.route("/detail_customer")
 def detail_customer():
     # id = request.form['id']
     id = request.args.get('id')
@@ -197,24 +197,51 @@ def data_transaction():
         flash("Akses ditolak")
         return redirect(url_for("home"))
         
-    print(invoice_lookup_with_status())
     all_invoice = invoice_lookup_with_status()
+    print(all_invoice)
+    print("WWKWKWK")
+
     return render_template("data_transaction.html",all_invoice=all_invoice)
 
 
 
+@app.route("/make_void",methods=["POST","GET"])
+def make_void():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    all_invoice = invoice_lookup_with_status()
+    if request.method == "GET":
+        id = request.args["id"]
+        print(id)
+        print(id_pelunasan_to_all_invoice(id))
+        selected = id_pelunasan_to_all_invoice(id)
+        repayment_date = selected[0][-1]
+        return render_template("make_void.html",all_invoice=all_invoice,id=id,selected=selected,repayment_date=repayment_date)
+    
+    confirm = request.form["confirm"]
+    id = request.form["id"]
+    print(request.form)
+    if confirm=="Yes":
+        message = void(id)
+        flash(f"Make void for repayment id {id}",category=message)
+        print("make void",id)
+    else:
+        print("cancel")
+    return redirect(url_for("data_transaction"))
 
 
 
 @app.route("/popup")
 def popup():
     return render_template("detail_customer.html")
-
-
+  
 @app.route("/edit",methods=['GET'])
 def edit_customer():
     id = request.args.get('id')
     return render_template("edit_data_customer.html",id=id)
+
     
 if __name__ == '__main__':
     initiate_table()
