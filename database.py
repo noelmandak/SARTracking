@@ -322,6 +322,7 @@ def void(id_pelunasan):
 # void(2)
 
 def id_pelunasan_to_all_invoice(id_pelunasan):
+    print("idpelunsan",id_pelunasan)
     with app.app_context():
         q = db.session.query(Customer.nama,Customer.foto,SaleInvoice.date,SaleInvoice.total,Pelunasan.date).join(Customer,SaleInvoice.id_customer==Customer.id_customer).filter(SaleInvoice.id_pelunasan==id_pelunasan).all()
         result = [[nama ,url_for('static',filename=foto),date_trans.strftime("%d/%m/%Y"),f'{total:,}',date_paid.strftime("%d/%m/%Y")] for nama,foto,date_trans,total,date_paid in q]
