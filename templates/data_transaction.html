@@ -6,12 +6,43 @@
     <div class="bulat a"></div>
     <div class="bulat b"></div>
     <div class="bulat c"></div>
-    <div class="title-header">Data Transaction</div>
+    <div class="title ">Data Transaction</div>
+    <a class="top-right-button" href="/manager">Back</a>
 </div>
 <div class="main-container">
-    <div class="data-container">
+    
+    <div class="input-section">
+        <input type="text" id="searchbar" name="search-by-name" placeholder="Cari berdasarkan nama" onkeyup="search_name()">
+        <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
+    </div>
+    <div class="data-container ">
+        {% for id,name,total,date,img,pelunasan in all_invoice %}
+        <div class="data-box">
+            <div class="profile-picture" style="background: url('{{img}}');background-size: cover;">
+            </div>
+            <div class="data-section">
+                <div class="name">
+                    {{name}}
+                </div>
+                <div class="number-section">
+                    <div class="date">
+                        {{date}}
+                    </div>
+                    <div class="total">
+                        Rp.{{total}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+        
+
+
+
+
+
         <div class="split-month">October 2022</div>
-        <div class="data-box paid">
+        <div class="data-box selected">
             <div class="profile-picture">
             </div>
             <div class="data-section">
@@ -80,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="data-box paid">
+        <div class="data-box selected">
             <div class="profile-picture">
             </div>
             <div class="data-section">

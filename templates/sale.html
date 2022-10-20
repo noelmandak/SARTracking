@@ -7,74 +7,38 @@
     <div class="bulat b"></div>
     <div class="bulat c"></div>
     <h3 class="role">Sales</h3>
-    <h4 class="name">Basuki Purnomo</h4>
-    <a class="logout" href="/logout">logout</a>
+    <h4 class="name">{{name}}</h4>
+    <a class="top-right-button" href="/logout">Logout</a>
     <div class="title-header">Invoices</div>
 </div>
 <div class="main-container">
+    {%for category, message in get_flashed_messages(with_categories=True)%}
+    <div class="{{category}}">{{message}}</div>
+    {%endfor%}
     <div class="border-bottom">
-        <button class="button">Create New Invoice</button>
+        <a href="/new_invoice" class="button">Create New Invoice</a>
     </div>
     <div class="data-container">
+        {% for id,name,total,date,img in all_invoice %}
         <div class="data-box">
-            <div class="profile-picture">
-                
+            <div class="profile-picture" style="background: url('{{img}}');background-size: cover;">
             </div>
             <div class="data-section">
-
                 <div class="name">
-                    Mr.Rudeus Greygrat
+                    {{name}}
                 </div>
                 <div class="number-section">
-                    <div class="total">
-                        Rp.123.000
-                    </div>
                     <div class="date">
-                        12/10/22
+                        {{date}}
                     </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="data-box">
-            <div class="profile-picture">
-                
-            </div>
-            <div class="data-section">
-
-                <div class="name">
-                    Mr.Rudeus Greygrat
-                </div>
-                <div class="number-section">
                     <div class="total">
-                        Rp.123.000
-                    </div>
-                    <div class="date">
-                        12/10/22
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="data-box">
-            <div class="profile-picture">
-                
-            </div>
-            <div class="data-section">
-
-                <div class="name">
-                    Mr.Rudeus Greygrat
-                </div>
-                <div class="number-section">
-                    <div class="total">
-                        Rp.123.000
-                    </div>
-                    <div class="date">
-                        12/10/22
+                        Rp.{{total}}
                     </div>
                 </div>
             </div>
         </div>
+        {%endfor%}
+        
     </div>
 </div>
 

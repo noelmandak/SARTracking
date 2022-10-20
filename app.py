@@ -1,117 +1,54 @@
 from flask import Flask, render_template,request,session,redirect,url_for,flash
 from database import *
 import socket
+import json
 
+def role_verify(jabatan):
+    if "jabatan" in session:
+        if session["jabatan"] == jabatan: return True
+    return False
 
 
 @app.route('/')
 def home():
-    if "username" in session:
-        if session["username"] == "sales_admin":
+    if "jabatan" in session:
+        if session["jabatan"] == "sales_admin":
             return redirect(url_for("sales_admin"))
-        elif session["username"] == "finance_admin":
+        elif session["jabatan"] == "finance_admin":
             return redirect(url_for("finance_admin"))
-        elif session["username"] == "manager":
+        elif session["jabatan"] == "manager":
             return redirect(url_for("manager"))
         else:
-            return redirect(url_for("login"))
+            flash("Akses ditolak, silahkan login dahulu")
+            return redirect(url_for("logout"))
     else:
         return redirect(url_for("login"))
-    
-@app.route('/sales_admin')
-def sales_admin():
-    # if "username" in session:
-    #     if session["username"] == "sales_admin":
-    #         return render_template("sale.html")
-    #     else: 
-    #         flash("Akses ditolak")
-    #         return redirect(url_for("login"))
-    # flash("Login terlebih dahulu")
-    # return redirect(url_for("login"))
-    return render_template("sale.html")
 
-@app.route('/new_invoice')
-def new_invoice():
-    return render_template("new_invoice.html")
 
-@app.route('/finance_admin')
-def finance_admin():
-    # if "username" in session:
-    #     if session["username"] == "finance_admin":
-    #         return render_template("finance.html")
-    #     else: 
-    #         flash("Akses ditolak")
-    #         return redirect(url_for("login"))
-    # flash("Login terlebih dahulu")
-    # return redirect(url_for("login"))s
-    return render_template("finance.html")
-
-@app.route('/manager')
-def manager():
-    # if "username" in session:
-    #     if session["username"] == "manager":
-    #         return render_template("manager.html")
-    #     else: 
-    #         flash("Akses ditolak")
-    #         return redirect(url_for("login"))
-    # flash("Login terlebih dahulu")
-    # return redirect(url_for("login"))
-    return render_template("manager.html")
-
-@app.route("/popup")
-def popup():
-    return render_template("detail_customer.html")
-
-@app.route("/detail_customer")
-def detail_customer():
-    return render_template("detail_customer.html")
-
-@app.route("/data_transaction")
-def data_transaction():
-    return render_template("data_transaction.html")
-
-@app.route('/new_customer')
-def new_customer():
-    return render_template("new_customer.html")
-
-@app.route('/data_customer')
-def data_customer():
-    return render_template("data_customer.html")
-    
-# @app.route('/register',methods=['POST'])
-# def register():
-#     username  = request.args.get('username')
-#     password  = request.args.get('password')
-#     print(username)
-#     return render_template("welcome.html",full_name=username)
-
-@app.route('/login',methods=['POST',"GET"])
+@app.route('/login',methods=['POST','GET'])    # type: ignore
 def login():
-    if "username" in session:
-        if session["username"] == "sales_admin":
+    if "jabatan" in session:
+        if session["jabatan"] == "sales_admin":
             return redirect(url_for("sales_admin"))
-        elif session["username"] == "finance_admin":
+        elif session["jabatan"] == "finance_admin":
             return redirect(url_for("finance_admin"))
-        elif session["username"] == "manager":
+        elif session["jabatan"] == "manager":
             return redirect(url_for("manager"))
 
     if request.method == 'POST':
         curr_username  = request.form['username']
         curr_password  = request.form['password']
-        curr_user = get_login_info(curr_username)
+        curr_user = get_login_info(curr_username) #[username, name, password, jabatan]
         if curr_user is not None:
-            if str(curr_user.password) == curr_password:
-                session['username'] = curr_user.jabatan
-                if curr_user.jabatan == "sales_admin":
-                    return redirect(url_for("sales_admin"))
-                elif curr_user.jabatan == "finance_admin":
-                    return redirect(url_for("finance_admin"))
-                elif curr_user.jabatan == "manager":
-                    return redirect(url_for("manager"))
+            if curr_user[2] == curr_password:
+                session['jabatan'] = curr_user[3]
+                session['name'] = curr_user[1]
+                if   session['jabatan'] == "sales_admin"  : return redirect(url_for("sales_admin"))
+                elif session['jabatan'] == "finance_admin": return redirect(url_for("finance_admin"))
+                elif session['jabatan'] == "manager"      : return redirect(url_for("manager"))
             else:
                 flash("Gagal, username atau passord tidak cocok")
                 return redirect(url_for("login"))
-            
         else:
             flash("Gagal, user tidak ditemukan")
             return redirect(url_for("login"))
@@ -123,7 +60,141 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
+
+
+
+
+##### Sales Admin #####
+@app.route('/sales_admin')
+def sales_admin():
+    if not role_verify("sales_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    name = session["name"]
+    all_invoice = invoice_lookup()
+    return render_template("sale.html",name=name, all_invoice=all_invoice,role=role)
+
+
+@app.route('/new_invoice',methods=['POST',"GET"])
+def new_invoice():
+    if not role_verify("sales_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    
+    if request.method == 'POST':
+        customer_name  = request.form['customer-name']
+        total  = request.form['total']
+        date  = request.form['date']
+        # print(customer_name,total,date)
+        message = add_invoice(customer_name,total,date)
+
+        flash(f"New Invoice Added",category=message)
+        return redirect(url_for("sales_admin"))
+
+    all_customer = get_all_customer_name()
+    return render_template("new_invoice.html", all_customer=all_customer)
+
+
+
+
+
+##### Finance Admin #####
+@app.route('/finance_admin')
+def finance_admin():
+    if not role_verify("finance_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    
+    name = session["name"]
+    all_invoice = invoice_lookup()
+
+    return render_template("finance.html",name=name,all_invoice=all_invoice)
+
+@app.route('/mark_invoice', methods=["POST"])
+def mark_invoice():
+    if not role_verify("finance_admin"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == 'POST':
+        id_transactions = request.form['selected']
+        id_transactions=json.loads(id_transactions)['transactions']
+        date = request.form['date']
+        message = make_pelunasan(id_transactions,date)
+        flash(f"{len(id_transactions)} Transaction has paid",category=message)
+    
+    return redirect(url_for("finance_admin"))
+
+
+
+##### Manager #####
+@app.route('/manager')
+def manager():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    
+    name = session["name"]
+    total_piutang = show_piutang_perusahaan()
+    total_piutang = f'{total_piutang:,}'
+
+@app.route('/new_customer', methods=['POST', 'GET'])
+def new_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == 'POST':
+        name = request.form['username']
+        phone_number = request.form['phone-number']
+        address = request.form['address']
+        profile_pict =  'images/tiff.png'
+        # profile_pict =  request.form['profile_pict']'
+        message = create_customer(name, address, phone_number, profile_pict)
+        flash("New customer successfully added.", category=message)
+        return redirect(url_for("data_customer"))
+
+    return render_template("new_customer.html")
+
+
+    return render_template("manager.html",name=name,total_piutang=total_piutang)
+
+@app.route("/detail_customer")
+def detail_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    return render_template("detail_customer.html")
+
+@app.route("/data_transaction")
+def data_transaction():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+        
+    print(invoice_lookup_with_status())
+    all_invoice = invoice_lookup_with_status()
+    return render_template("data_transaction.html",all_invoice=all_invoice)
+
+
+
+
+
+
+@app.route("/popup")
+def popup():
+    return render_template("detail_customer.html")
+
+
+@app.route('/data_customer')
+def data_customer():
+    return render_template("data_customer.html")
+
+
 if __name__ == '__main__':
+    # initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)

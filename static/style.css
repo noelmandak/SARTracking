@@ -20,11 +20,10 @@
             flex-direction: column;
             align-items: center;
             background-color: #F9A826;
+            /* border: 1px solid black; */
             height: 100vh;
-            width: 100vw;
-            border: 1px solid black;
-            overflow-x:hidden;
             position: relative;
+            max-height: 100vh;
         }
 
         .header {
@@ -35,6 +34,8 @@
             justify-content: center;
             position: relative;
             width: 100%;
+            overflow-x: hidden;
+            overflow-y: hidden;
         }
 
         .header.large {
@@ -100,7 +101,7 @@
         .header .name{
             position: absolute;
             left: 25px;
-            top: 60px;
+            top: 50px;
             color: #FFFFFF;
 
             font-family: 'Quicksand';
@@ -156,9 +157,9 @@
             width: 100%;
             background-color: white;
             padding: 30px 30px;
-            margin-top: 20px;
             border-radius: 30px 30px 0 0;
-            height: 100%;
+            align-self: stretch;
+            flex: 1;
         }
 
         .form-box {
@@ -188,9 +189,21 @@
             font-size: 20px;
             line-height: 19px;
         }
+        /* select:invalid { color: #ADADAD; } */
+        
+        ::placeholder, ::-ms-input-placeholder  { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color:#ADADAD;
+            opacity: 1; /* Firefox */
+          }
+
         .alert {
             text-align: center;
             color: red;
+        }
+        .success {
+            text-align: center;
+            color: green;
+            margin-bottom: 10px;
         }
         .button {
             background-color: #FFB133;
@@ -201,7 +214,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-
+            margin: 10px 0;
             cursor: pointer;
 
             font-family: Quicksand;
@@ -235,7 +248,7 @@
             margin-bottom: 17px;
         }
 
-        .logout {
+        .top-right-button {
             position: absolute;
             right: 20px;
             top: 20px;
@@ -247,11 +260,11 @@
             font-family: 'Quicksand';
             font-style: normal;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 15px;
             line-height: 15px;
             color: white;
         }
-        .logout:hover{
+        .top-right-button:hover{
             background-color: #F9A826;
         }
 
@@ -259,7 +272,13 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            height: 56vh;
+            overflow-y: scroll;
+            margin-bottom: 10px;
         }
+        .data-container::-webkit-scrollbar {
+            display: none;
+          }
 
         .data-box {
             background-color: #D9D9D9;
@@ -294,19 +313,27 @@
         }
         
         .data-section {
-            width: 80%;
+            width: 100%;
             display: flex;
             justify-content: space-around;
-            flex-direction: column;
+            flex-direction: column;  
+            padding: 5px 20px 5px 10px;
         }
         
-        .data-box.paid {
+        .data-box.selected {
             cursor: pointer;
             background-color: #7CDCD6;
         }
 
-        .data-box.paid:hover {
+        .data-box.selected:hover {
             background-color: #74d2cc;
+        }
+        .data-box.unselect {
+            cursor: pointer;
+        }
+
+        .data-box.unselect:hover {
+            background-color: #a09f9f;
         }
 
         .total-piutang {
@@ -338,6 +365,9 @@
             justify-content: center;
             background-color: rgba(0, 0, 0, 0.21);
         }
+        /* .popup form {
+            width: 100%;
+        } */
 
         .box-popup {
             display: flex;
@@ -346,7 +376,8 @@
             align-items: center;
             padding: 25px;
             width: 320px;
-            height: 300px;
+            min-height: 200px;
+            max-height: 380px;
             background: #FFFFFF;
             box-shadow: 5px 8px 10px 4px rgba(255, 177, 51, 0.56);
             border-radius: 20px;
@@ -358,7 +389,7 @@
             font-size: 20px;
             line-height: 25px;
             /* identical to box height */
-
+            margin-bottom: 5px;
             text-align: center;
         }
         .icon-popup {
