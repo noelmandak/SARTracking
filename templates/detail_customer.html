@@ -9,61 +9,52 @@
     <div class="title-header small">Data Customer</div>
 </div>
 <div class="main-container align-center">
-    <div class="name-title">James Patrick</div>
+    <div class="name-title">{{nama}}</div>
     <div class="picture-container">
-        <div class="profile-picture pp-big"></div>
+        <div class="profile-picture pp-big" style="background: url('{{foto}}');background-size: cover;"></div>
     </div>
     <div class="row-data">
         <div class="fiture">Address</div>
-        <div class="contain">Jl. Industri Blok B14, RW 10, Pademangan Timur, Kemayoran, Jakarta 10610, CIT 2003, lt. 8 </div>        
+        <div class="contain">{{alamat}}</div>        
     </div>
     <div class="row-data">
         <div class="fiture">Phone Number</div>
-        <div class="contain">+62812-5263-8777</div>        
+        <div class="contain">{{no_tlp}}</div>        
     </div>
     <div class="row-data">
         <div class="fiture">Status Customer</div>
-        <div class="contain">Aktif</div>        
+        <div class="contain">{{status}}</div>        
     </div>
     <div class="row-data">
         <div class="fiture">Total Transaction</div>
-        <div class="contain">Rp. 400.000</div>        
+        <div class="contain">{{total}}</div>        
     </div>
     <div class="option">
         <div class="row-data">
             <div class="fiture">Paid</div>
-            <div class="contain">Rp. 200.000</div>        
+            <div class="contain">{{paid}}</div>        
         </div>
         <div class="row-data">
             <div class="fiture">Unpaid</div>
-            <div class="contain">Rp. 200.000</div>        
+            <div class="contain">{{unpaid}}</div>        
         </div>
     </div>
           
     <div class="option">
-        <div class="button trio">Edit</div>
-        <div class="button trio">Deactive</div>
-        <div class="button trio">Delete</div>
+        <div class="button duo">Edit</div>
+        <div class="button duo">Deactive</div>
     </div>
 
     <div class="h-line"></div>
     <div class="name-title">Transaction History</div>
     <table class="transaction-table">
+        {% for date,ket,total in invoices %}
         <tr>
-            <td class="c-1">11/10/22</td>
-            <td class="c-2">unpaid</td>
-            <td class="c-3">200.000</td>
+            <td class="c-1">{{date}}</td>
+            <td class="c-2">{{ket}}</td>
+            <td class="c-3">{{total}}</td>
         </tr>
-        <tr>
-            <td class="c-1">11/10/22</td>
-            <td class="c-2">paid at 12/10/22</td>
-            <td class="c-3">200.000</td>
-        </tr>
-        <tr>
-            <td class="c-1">11/10/22</td>
-            <td class="c-2">paid at 12/10/22</td>
-            <td class="c-3">200.000</td>
-        </tr>
+        {% endfor %}
     </table>
 
 
