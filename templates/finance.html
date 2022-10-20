@@ -7,11 +7,124 @@
     <div class="bulat b"></div>
     <div class="bulat c"></div>
     <h3 class="role">Finance</h3>
-    <h4 class="name">Tiffany Sondakh</h4>
-    <a class="logout" href="/logout">logout</a>
+    <h4 class="name">{{name}}</h4>
+    <a class="top-right-button" href="/logout">logout</a>
 </div>
 <div class="main-container">
-    a
+    {%for category, message in get_flashed_messages(with_categories=True)%}
+    <div class="{{category}}">{{message}}</div>
+    {%endfor%}
+    <div class="input-section">
+        <input type="text" id="searchbar" name="search-by-name" placeholder="Cari berdasarkan nama" onkeyup="search_name()">
+        <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
+    </div>
+    
+    <div class="checkbox-container">
+        <span id="num-selected">0</span> Selected
+    </div>
+    <div class="data-container">
+        {% for id,name,total,date,img in all_invoice %}
+        <div class="data-box unselect" onclick="select_box(this,{{id}})">
+            <div class="profile-picture" style="background: url('{{img}}');background-size: cover;">
+            </div>
+            <div class="data-section">
+                <div class="name" id="customer-name">{{name}}</div>
+                <div class="number-section">
+                    <div class="date">
+                        {{date}}
+                    </div>
+                    <div class="total">
+                        Rp.{{total}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+        
+    </div>
+    <button class="button" onclick="send_to_mark_invoice()">Mark as paid</button>
+
 </div>
+
+<div class="popup" id="popup" style="display: None;">
+    <form class="box-popup" action="/mark_invoice" method="post">
+        <div class="title-popup">Confirm Mark as Paid</div>
+        
+
+        <div class="data-container" id="data-container" style="height: 100%;">
+        </div>
+        <div class="input-section" style="display: inline;">
+            <label for="date">Date: </label> <input name="date" type="date" required style="margin: 0;">
+        </div>
+        <div class="option">
+            <button type="button" onclick="send_no()" class="button duo">No</button>
+            <button onclick="send_yes()" class="button duo" id="yes-button" name="selected" value="hehehe">Yes</button>
+        </div>
+    </form>
+</div>
+<script>
+
+    var selectedList = [];
+    var transactions_id = [];
+    function search_name() {
+        let input = document.getElementById('searchbar').value
+        input=input.toLowerCase();
+        let x = document.getElementsByClassName('data-box');
+        
+        for (i = 0; i < x.length; i++) { 
+            var name = x[i].getElementsByClassName('name')[0].innerHTML.toLowerCase();
+            console.log(name)
+            if (!name.includes(input)) {
+                x[i].style.display="none";
+            }
+            else {
+                x[i].style.display="flex";                 
+            }
+        }
+    }
+    
+    function select_box(element,id) {
+        condition = element.classList[1]
+        if (condition === "unselect") {
+            element.classList.remove("unselect");
+            element.classList.add("selected");
+            selectedList.push([id,element])
+        } else {
+            element.classList.remove("selected");
+            element.classList.add("unselect");
+            for (let i=0; i<selectedList.length;i++) {
+                if (selectedList[i][0]===id) {
+                    selectedList.splice(i,1)
+                }
+            }
+        }
+        document.getElementById("num-selected").textContent = selectedList.length
+    }
+
+    function send_to_mark_invoice() {
+        transactions_id = []
+        popup = document.getElementById("popup")
+        popup.style.display = "flex";
+        data_container = document.getElementById("data-container")
+        for (let i=0;i<selectedList.length;i++) {
+            transactions_id.push(selectedList[i][0])
+            clone = selectedList[i][1].cloneNode(true)
+            clone.removeAttribute("onclick")
+            data_container.appendChild(clone)
+        }
+    }
+
+    function send_no() {
+        popup = document.getElementById("popup")
+        popup.style.display = "none";
+        data_container.innerHTML = ""
+    }
+    function send_yes() {
+        str_transactions = JSON.stringify({transactions:transactions_id})
+        yes_button = document.getElementById("yes-button")
+        yes_button.value = str_transactions
+    }
+
+</script>
 
 {% endblock %}

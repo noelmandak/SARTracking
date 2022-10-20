@@ -1,0 +1,40 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="header">
+    <div class="bulat a"></div>
+    <div class="bulat b"></div>
+    <div class="bulat c"></div>
+    <h3 class="title large">New Customer</h3>
+</div>
+<div class="main-container">
+    <form class="form-box" action="/login" method="post">
+        <div class="input-box">
+            <div class="input-section">
+                <label for="username">Customer Name</label>
+                <input type="text" name="username" placeholder="Input Customer Name" required>
+            </div>
+            <div class="input-section">
+                <label for="address">Address</label>
+                <input type="text" name="address" placeholder="Input Customer Address" required>
+            </div>
+            <div class="input-section">
+                <label for="phone-number">Phone Number</label>
+                <input type="number" min="0" name="phone-number" placeholder="Input Customer Address" required>
+            </div>
+            <div class="input-section">
+                <label for="profile-pict">Profile Picture</label>
+                <input type="file" name="profile-pict" placeholder="Upload Profile Picture" required>
+            </div>
+            {%for category, message in get_flashed_messages(with_categories=True)%}
+            <div class="alert">{{message}}</div>
+            {%endfor%}
+
+        </div>
+
+        <input class="button" type="submit" value="Add New Customer">
+    </form>
+</div>
+
+{% endblock %}

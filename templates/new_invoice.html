@@ -1,0 +1,41 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="header">
+    <div class="bulat a"></div>
+    <div class="bulat b"></div>
+    <div class="bulat c"></div>
+    <h3 class="title large">New Invoice</h3>
+    <a class="top-right-button" href="/sales_admin">Batal</a>
+</div>
+<div class="main-container">
+    <form class="form-box" action="" method="post">
+        <div class="input-box">
+            <div class="input-section">
+                <label for="customer-name">Customer Name</label>
+                <!-- <input type="text" name="customer-name" placeholder="Enter your customer-name" required> -->
+                <select name="customer-name" required>
+                    
+                    <option value="" disabled selected>Select Customes Name</option>
+                    <!-- <option hidden value="">Input Customes Name</option> -->
+                    {% for id,name in all_customer %}
+                        <option value="{{id}}">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-section">
+                <label for="total">Total</label>
+                <input type="number" min="0" name="total" placeholder="Input Customers Credit" required>
+            </div>
+            <div class="input-section">
+                <label for="date">Date</label>
+                <input name="date" type="date" required>
+            </div>
+
+        </div>
+        <input class="button" type="submit" value="Create Invoice">
+    </form>
+</div>
+
+{% endblock %}
