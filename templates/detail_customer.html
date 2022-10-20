@@ -28,23 +28,26 @@
     </div>
     <div class="row-data">
         <div class="fiture">Total Transaction</div>
-        <div class="contain">{{total}}</div>        
+        <div class="contain">Rp.{{total}}</div>        
     </div>
     <div class="option">
         <div class="row-data">
             <div class="fiture">Paid</div>
-            <div class="contain">{{paid}}</div>        
+            <div class="contain">Rp.{{paid}}</div>        
         </div>
         <div class="row-data">
             <div class="fiture">Unpaid</div>
-            <div class="contain">{{unpaid}}</div>        
+            <div class="contain">Rp.{{unpaid}}</div>        
         </div>
     </div>
-          
-    <div class="option">
-        <a href="/edit_data_customer?id={{id}}" class="button duo">Edit</div>
-        <div class="button duo">Deactive</div>
-    </div>
+      
+    <form action="/edit_status_customer" method="POST" class="option">
+        <a href="/edit_data_customer?id={{id}}" class="button duo">Edit</a>
+        <!-- <div class="button duo">Deactive</div> -->
+        
+        <input hidden name="id" value="{{id}}">
+        <button name="status-button" class="button duo" value="{{act_button}}">{{act_button}}</button>
+    </form>
 
     <div class="h-line"></div>
     <div class="name-title">Transaction History</div>

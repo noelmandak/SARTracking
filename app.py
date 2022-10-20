@@ -181,15 +181,20 @@ def detail_customer():
     # id = request.form['id']
     id = request.args.get('id')
     nama,alamat,no_tlp,foto,status,paid,unpaid,invoices = get_detail_customer(id)
-    if unpaid != None and paid !=None:
-        total = unpaid+paid
-    elif unpaid != None:
-        total = unpaid
-    elif paid != None:
-        total = paid
-    else:
-        total = 0
-    return render_template("detail_customer.html",nama=nama,alamat=alamat,no_tlp=no_tlp,foto=url_for('static',filename=foto),status=status,paid=paid,unpaid=unpaid,invoices=invoices,total=total)
+    if paid==None : paid=0
+    if unpaid==None :  unpaid=0
+    total = paid+unpaid
+    # if unpaid != None and paid !=None:
+    #     total = unpaid+paid
+    # elif unpaid != None:
+    #     total = unpaid
+    # elif paid != None:
+    #     total = paid
+    # else:
+    #     total = 0
+    if status == "active": act_button = "Deactivate"
+    else: act_button = "Activate"
+    return render_template("detail_customer.html",id=id,nama=nama,alamat=alamat,no_tlp=no_tlp,foto=url_for('static',filename=foto),status=status,paid=f'{paid:,}',unpaid=f'{unpaid:,}',invoices=invoices,total=f'{total:,}',act_button=act_button)
 
 @app.route("/data_transaction")
 def data_transaction():
@@ -232,19 +237,54 @@ def make_void():
     return redirect(url_for("data_transaction"))
 
 
+@app.route("/edit_data_customer",methods=['GET','POST'])
+def edit_data_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        id = int(request.form["id"])
+        name = request.form["username"]
+        address = request.form["address"]
+        phone = request.form["phone-number"]
+        edit_customer(id,name,"nama")  # type: ignore
+        edit_customer(id,address,"alamat")  # type: ignore
+        edit_customer(id,phone,"no_telpon")  # type: ignore
+        flash("Profile Updated",category="success")
+        return redirect(url_for("detail_customer")+f"?id={id}")
+
+    id = request.args.get('id')
+    details = get_detail_customer(id)
+    name = details[0]
+    address = details[1]
+    phone = details[2]
+    img = details[3]
+    return render_template("edit_data_customer.html",id=id,name=name,phone=phone,img=img,address=address)
+  
+@app.route("/edit_status_customer", methods=["POST"])
+def edit_status_customer():
+    if not role_verify("manager"):
+        flash("Akses ditolak")
+        return redirect(url_for("home"))
+    
+    id = request.form["id"]
+    # status = request.form["status-button"]
+    change_customer_status(id)
+    target = url_for("detail_customer")+f"?id={id}"
+    print(target)
+    return redirect(target)
 
 @app.route("/popup")
 def popup():
     return render_template("detail_customer.html")
-  
-@app.route("/edit",methods=['GET'])
-def edit_customer():
-    id = request.args.get('id')
-    return render_template("edit_data_customer.html",id=id)
+    
+
+
 
     
 if __name__ == '__main__':
-    initiate_table()
+    # initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)

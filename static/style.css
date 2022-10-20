@@ -241,6 +241,10 @@
             display: flex;
             justify-content: space-between;
         }
+        .option .row-data{
+            width: 50%;
+        }
+        
 
 
         .border-bottom {
@@ -298,6 +302,11 @@
         .profile-picture.pp-big {
             width: 130px;
             height: 130px;
+        }
+        .picture-container.center {
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         .data-box .name, .data-box  .status {

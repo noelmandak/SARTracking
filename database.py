@@ -197,7 +197,7 @@ def change_customer_status(id):
     with app.app_context():
         q = Customer.query.filter_by(id_customer=id).first()
         if q.status == 'active':
-            q.status = 'inactive'
+            q.status = 'non-active'
         else:
             q.status = 'active'
         db.session.commit()
