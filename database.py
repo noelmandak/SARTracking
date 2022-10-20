@@ -73,7 +73,8 @@ def initiate_table():
         adm1 = Admin('Patrick','James Patrick Oentoro','123','manager')
         adm2 = Admin('Noel','Noel Christevent Mandak','123','sales_admin')
         adm3 = Admin('Tiff', 'Tiffany Sondakh','123','finance_admin')
-        db.session.add_all([adm1,adm2,adm3])
+        adm4 = Admin('Ken', 'Khenny Fileo Suciady','123','finance_admin')
+        db.session.add_all([adm1,adm2,adm3,adm4])
         db.session.commit()
         add_dummy_data()
 
