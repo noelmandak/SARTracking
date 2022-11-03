@@ -284,7 +284,7 @@ def popup():
 
     
 if __name__ == '__main__':
-    # initiate_table()
+    initiate_table()
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     app.run(host=ip_address, port=5000, debug=True, threaded=False)

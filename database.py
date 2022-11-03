@@ -74,7 +74,8 @@ def initiate_table():
         adm1 = Admin('Patrick','James Patrick Oentoro','123','manager')
         adm2 = Admin('Noel','Noel Christevent Mandak','123','sales_admin')
         adm3 = Admin('Tiff', 'Tiffany Sondakh','123','finance_admin')
-        db.session.add_all([adm1,adm2,adm3])
+        adm4 = Admin('Ken', 'Khenny Fileo Suciady','123','sales_admin')
+        db.session.add_all([adm1,adm2,adm3, adm4])
         db.session.commit()
         add_dummy_data()
 
@@ -183,7 +184,7 @@ def edit_customer(id,new_val,to_edit):
         elif to_edit == 'alamat':
             q.alamat = new_val
         elif to_edit == 'no_telpon':
-            q.no_telpon = new_val
+            q.telp = new_val
         elif to_edit == 'foto':
             q.foto = new_val
         db.session.commit()
@@ -324,9 +325,9 @@ def void(id_pelunasan):
 def id_pelunasan_to_all_invoice(id_pelunasan):
     print("idpelunsan",id_pelunasan)
     with app.app_context():
-        q = db.session.query(Customer.nama,Customer.foto,SaleInvoice.date,SaleInvoice.total,Pelunasan.date).join(Customer,SaleInvoice.id_customer==Customer.id_customer).filter(SaleInvoice.id_pelunasan==id_pelunasan).all()
-        result = [[nama ,url_for('static',filename=foto),date_trans.strftime("%d/%m/%Y"),f'{total:,}',date_paid.strftime("%d/%m/%Y")] for nama,foto,date_trans,total,date_paid in q]
-        print(result)
+        q = db.session.query(Customer.nama,Customer.foto,SaleInvoice.date,SaleInvoice.total,Pelunasan.date).join(SaleInvoice,SaleInvoice.id_customer==Customer.id_customer).filter(SaleInvoice.id_pelunasan==id_pelunasan).all()
+        result = list({(nama ,url_for('static',filename=foto),date_trans.strftime("%d/%m/%Y"),f'{total:,}',date_paid.strftime("%d/%m/%Y")) for nama,foto,date_trans,total,date_paid in q})
+        print("hehe",q)
         return result
 # id_pelunasan_to_all_invoice(1)
 
